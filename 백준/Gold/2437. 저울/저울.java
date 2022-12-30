@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,10 +25,6 @@ public class Main {
 
     public static void solve() {
         Collections.sort(weight);
-        makeNumber();
-    }
-
-    private static void makeNumber() {
         findNumber();
     }
 
