@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -19,6 +18,7 @@ public class Main {
             map.add(new ArrayList<>());
         }
 
+        
         one = sc.nextInt();
         two = sc.nextInt();
 
