@@ -36,15 +36,10 @@ public class Main {
 
         if (dp[num - 1] + map[num] > map[num]){
             dp[num] = dp[num - 1] + map[num];
-            if(max < dp[num]){
-                max = dp[num];
-            }
-            return;
+        }else{
+            dp[num] = map[num];
         }
 
-        dp[num] = map[num];
-        if(max < dp[num]){
-            max = dp[num];
-        }
+        max = Math.max(max , dp[num]);
     }
 }
