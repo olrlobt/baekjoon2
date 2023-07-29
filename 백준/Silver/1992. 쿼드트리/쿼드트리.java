@@ -1,17 +1,21 @@
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int N = sc.nextInt();
+
+        int N = Integer.parseInt(br.readLine());
         int[][] map = new int[N][N];
 
         for (int row = 0; row < N; row++) {
-            String[] input = sc.next().split("");
+
+            String[] input = br.readLine().split("");
 
             for (int column = 0; column < N; column++) {
                 map[row][column] = Integer.parseInt(input[column]);
