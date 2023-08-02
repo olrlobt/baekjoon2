@@ -6,6 +6,7 @@ import java.util.*;
 public class Main {
 
     static StringBuilder sb = new StringBuilder();
+    static List<Integer> correct = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
 
@@ -14,15 +15,14 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        List<Integer> list = new ArrayList<>();
-        combination(N, M , list);
+        combination(N, M);
         System.out.println(sb);
     }
 
-    private static void combination(int N, int M , List<Integer> list) {
+    private static void combination(int N, int M) {
 
         if (M == 0) {
-            for (int i : list) {
+            for (int i : correct) {
                 sb.append(i).append(" ");
             }
             sb.append("\n");
@@ -31,12 +31,12 @@ public class Main {
 
         for (int i = 1; i <= N; i++) {
 
-            if (list.contains(i) ) {
+            if (correct.contains(i)) {
                 continue;
             }
-            list.add(i);
-            combination(N,M-1, new ArrayList<>(list));
-            list.remove(new Integer(i));
+            correct.add(i);
+            combination(N, M - 1);
+            correct.remove(new Integer(i));
         }
     }
 }
