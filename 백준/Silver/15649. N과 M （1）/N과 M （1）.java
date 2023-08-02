@@ -6,23 +6,28 @@ import java.util.*;
 public class Main {
 
     static StringBuilder sb = new StringBuilder();
-    static List<Integer> correct = new ArrayList<>();
+    static int[] answer;
+    static boolean[] visited;
+
+    static int M;
 
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+         M = Integer.parseInt(st.nextToken());
+        answer = new int[M];
+        visited = new boolean[N+1];
 
-        combination(N, M);
+        combination(N, 0);
         System.out.println(sb);
     }
 
-    private static void combination(int N, int M) {
+    private static void combination(int N, int m) {
 
-        if (M == 0) {
-            for (int i : correct) {
+        if (m == M) {
+            for (int i : answer) {
                 sb.append(i).append(" ");
             }
             sb.append("\n");
@@ -31,12 +36,13 @@ public class Main {
 
         for (int i = 1; i <= N; i++) {
 
-            if (correct.contains(i)) {
+            if (visited[i]) {
                 continue;
             }
-            correct.add(i);
-            combination(N, M - 1);
-            correct.remove(new Integer(i));
+            visited[i] = true;
+            answer[m] = i;
+            combination(N, m + 1);
+            visited[i] = false;
         }
     }
 }
