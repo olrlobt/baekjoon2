@@ -35,7 +35,7 @@ public class Main {
             return;
         }
 
-        for (int i = cur; i <= N ; i++) {
+        for (int i = cur; i <= N &&  i <= N - (M - count) + 1; i++) {
 
             if (visited[i]) {
                 continue;
