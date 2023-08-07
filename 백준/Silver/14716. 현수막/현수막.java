@@ -1,7 +1,7 @@
-
-import java.util.Arrays;
-import java.util.Queue;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -14,17 +14,19 @@ public class Main {
     static int[] dx = {-1, 0, 1, -1, 1, -1, 0, 1};
     static int count = 0;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        M = sc.nextInt();
-        N = sc.nextInt();
+        M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
         map = new int[M][N];
         visited = new boolean[M][N];
 
         for (int row = 0; row < M; row++) {
+            st = new StringTokenizer(br.readLine());
             for (int column = 0; column < N; column++) {
-                map[row][column] = sc.nextInt();
+                map[row][column] = Integer.parseInt(st.nextToken());
             }
         }
 
