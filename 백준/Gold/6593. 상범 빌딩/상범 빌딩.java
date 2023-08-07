@@ -1,8 +1,9 @@
-
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -10,14 +11,14 @@ public class Main {
     static final int[] dy = {0, -1, 0, 1, 0, 0};
     static final int[] dz = {0, 0, 0, 0, -1, 1};
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
         while (true) {
-
-            int L = sc.nextInt();
-            int R = sc.nextInt();
-            int C = sc.nextInt();
+            st = new StringTokenizer(br.readLine());
+            int L = Integer.parseInt(st.nextToken());
+            int R = Integer.parseInt(st.nextToken());
+            int C = Integer.parseInt(st.nextToken());
             int[] start = new int[3];
             int[] end = new int[3];
 
@@ -28,8 +29,10 @@ public class Main {
             Character[][][] map = new Character[L][R][C];
             boolean[][][] visited = new boolean[L][R][C];
             for (int l = 0; l < L; l++) {
+
                 for (int r = 0; r < R; r++) {
-                    String input = sc.next();
+                    String input = br.readLine();
+
                     for (int c = 0; c < C; c++) {
                         map[l][r][c] = input.charAt(c);
                         if (map[l][r][c] == 'S') {
@@ -41,6 +44,7 @@ public class Main {
                         }
                     }
                 }
+                br.readLine();
             }
 
             int result = solve(visited, start, end, L, R, C);
