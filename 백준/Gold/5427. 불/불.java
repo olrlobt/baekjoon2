@@ -1,27 +1,30 @@
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
     static final int[] dx = {1, 0, -1, 0};
     static final int[] dy = {0, -1, 0, 1};
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        int T = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        int T = Integer.parseInt(br.readLine());
 
         for (int testCase = 0; testCase < T; testCase++) {
-            int M = sc.nextInt();
-            int N = sc.nextInt();
+            st =   new StringTokenizer(br.readLine());
+            int M = Integer.parseInt(st.nextToken());
+            int N = Integer.parseInt(st.nextToken());
 
 
             Character[][] map = new Character[N][M];
             int[] start = new int[2];
             for (int row = 0; row < N; row++) {
-                String input = sc.next();
+                String input = br.readLine();
 
                 for (int column = 0; column < M; column++) {
                     map[row][column] = input.charAt(column);
