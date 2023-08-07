@@ -1,10 +1,11 @@
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -12,10 +13,10 @@ public class Main {
     static int[] visited;
     static int N;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        N = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        N = Integer.parseInt(br.readLine());
         visited = new int[N + 1];
 
         for (int i = 0; i <= N; i++) {
@@ -23,15 +24,16 @@ public class Main {
         }
 
         for (int num = 0; num < N; num++) {
-            int nodeIndex = sc.nextInt();
+            st = new StringTokenizer(br.readLine());
+            int nodeIndex = Integer.parseInt(st.nextToken());
 
             while (true) {
-                int index = sc.nextInt();
+                int index = Integer.parseInt(st.nextToken());
 
                 if (index == -1) {
                     break;
                 }
-                int distance = sc.nextInt();
+                int distance = Integer.parseInt(st.nextToken());
 
                 Node node = new Node(index, distance);
                 map.get(nodeIndex).add(node);
@@ -39,17 +41,17 @@ public class Main {
             }
         }
 
-        Node startNode = bfs(new Node(1,0));
+        Node startNode = bfs(new Node(1, 0));
 
         Node endNode = bfs(startNode);
         System.out.println(endNode.distance);
     }
 
     public static Node bfs(Node startNode) {
-        Node maxNode = new Node(0,0);
+        Node maxNode = new Node(0, 0);
         int[] dp = new int[N + 1];
         dp[startNode.index] = 0;
-        Arrays.fill(dp,-1);
+        Arrays.fill(dp, -1);
         Queue<Node> queue = new LinkedList<>();
         queue.offer(new Node(startNode.index, 0));
 
@@ -57,11 +59,11 @@ public class Main {
 
             Node curNode = queue.poll();
 
-            if(dp[curNode.index] != -1){
+            if (dp[curNode.index] != -1) {
                 continue;
             }
             dp[curNode.index] = curNode.distance;
-            if(maxNode.distance < curNode.distance){
+            if (maxNode.distance < curNode.distance) {
                 maxNode = curNode;
             }
 
