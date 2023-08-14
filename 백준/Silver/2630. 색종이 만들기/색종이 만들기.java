@@ -1,5 +1,7 @@
-
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -7,26 +9,28 @@ public class Main {
     static int white = 0;
     static int blue = 0;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
 
-        int N = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        int N = Integer.parseInt(br.readLine());
         map = new int[N][N];
 
         for (int row = 0; row < N; row++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
             for (int column = 0; column < N; column++) {
-                map[row][column] = sc.nextInt();
+                map[row][column] = Integer.parseInt(st.nextToken());
             }
         }
 
         solve(0, 0, N);
-        System.out.println(white);
-        System.out.println(blue);
+        sb.append(white).append("\n").append(blue);
+        System.out.println(sb);
     }
 
     public static void solve(int x, int y, int size) {
 
-        if (colorCheck(x, y, size)) {
+        if (checkColor(x, y, size)) {
             if (map[y][x] == 1) {
                 blue++;
             }else {
@@ -41,10 +45,9 @@ public class Main {
         solve(x, y + size, size);
         solve(x + size, y, size);
         solve(x + size, y + size, size);
-
     }
 
-    private static boolean colorCheck(int x, int y, int size) {
+    private static boolean checkColor(int x, int y, int size) {
         int standard = map[y][x];
 
         for (int i = 0; i < size; i++) {
