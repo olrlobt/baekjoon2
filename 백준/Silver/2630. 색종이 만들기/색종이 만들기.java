@@ -17,9 +17,9 @@ public class Main {
         map = new int[N][N];
 
         for (int row = 0; row < N; row++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for (int column = 0; column < N; column++) {
-                map[row][column] = Integer.parseInt(st.nextToken());
+            String st = br.readLine();
+            for (int j = 0, inx = 0; j < N; j++, inx+=2) {
+                map[row][j] = st.charAt(inx)-'0';
             }
         }
 
