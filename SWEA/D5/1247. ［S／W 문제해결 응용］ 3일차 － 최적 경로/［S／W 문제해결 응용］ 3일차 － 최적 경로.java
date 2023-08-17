@@ -1,27 +1,34 @@
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        int T = Integer.parseInt(br.readLine());
 
-        int T = sc.nextInt();
         for (int testCase = 1; testCase <= T; testCase++) {
-            int N = sc.nextInt();
-            int[] home = new int[]{sc.nextInt(), sc.nextInt()};
-            int[] company = new int[]{sc.nextInt(), sc.nextInt()};
+            int N = Integer.parseInt(br.readLine());
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            int[] home = new int[]{Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())};
+            int[] company = new int[]{Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())};
             int[][] map = new int[N][2];
             boolean[] visited = new boolean[N];
 
             for (int i = 0; i < N; i++) {
-                map[i] = new int[]{sc.nextInt(), sc.nextInt()};
+                map[i] = new int[]{Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())};
             }
-
-            System.out.println("#" + testCase + " " + getMinDis(calDistance(home, company, map), visited, N, 0, 0));
+            sb.append("#").append(testCase).append(" ").append(getMinDis(calDistance(home, company, map), visited, N, 0, 0)).append("\n");
         }
+        System.out.println(sb);
     }
+
 
     private static int getMinDis(int[][] distance, boolean[] visited, int cur, int dis, int count) {
         int min = Integer.MAX_VALUE;
@@ -62,4 +69,6 @@ public class Solution {
         }
         return distance;
     }
+
+
 }
