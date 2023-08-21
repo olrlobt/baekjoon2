@@ -1,24 +1,25 @@
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Main {
 
     static ArrayList<ArrayList<Node>> map;
     static int[] result;
-
     static int N;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-        int T = sc.nextInt();
+        int T = Integer.parseInt(br.readLine());
 
         for (int testCase = 0; testCase < T; testCase++) {
-            N = sc.nextInt(); //node
-            int M = sc.nextInt(); //line
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            N = Integer.parseInt(st.nextToken());
+            int M = Integer.parseInt(st.nextToken());
+
             map = new ArrayList<>();
             result = new int[N + 1];
             for (int i = 0; i <= N; i++) {
@@ -26,18 +27,19 @@ public class Main {
             }
 
             for (int i = 0; i < M; i++) {
-                int start = sc.nextInt();
-                int end = sc.nextInt();
-                int distance = sc.nextInt();
+                st = new StringTokenizer(br.readLine());
+                int start = Integer.parseInt(st.nextToken());
+                int end = Integer.parseInt(st.nextToken());
+                int distance = Integer.parseInt(st.nextToken());
 
                 map.get(start).add(new Node(end, distance));
                 map.get(end).add(new Node(start, distance));
-
             }
 
-            int K = sc.nextInt(); // friends
+            int K = Integer.parseInt(br.readLine());
+            st = new StringTokenizer(br.readLine());
             for (int i = 0; i < K; i++) {
-                solve(sc.nextInt());
+                solve(Integer.parseInt(st.nextToken()));
             }
             int min = Integer.MAX_VALUE;
             int minIndex = 0;
@@ -50,8 +52,6 @@ public class Main {
 
             System.out.println(minIndex);
         }
-
-
     }
 
     public static void solve(int startIndex) {
