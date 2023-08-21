@@ -1,98 +1,77 @@
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Main {
 
+    static ArrayList<ArrayList<Node>> map;
     static int N;
-    static int M;
-    static int S;
-    static int T;
-    static ArrayList<ArrayList<Node>> graph = new ArrayList<>();
 
-    static int[] distanceDP;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        N = sc.nextInt();
-        M = sc.nextInt();
+        N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        map = new ArrayList<>();
 
         for (int i = 0; i <= N; i++) {
-            graph.add(new ArrayList<>());
+            map.add(new ArrayList<>());
         }
 
-        for (int line = 0; line < M; line++) {
-            int start = sc.nextInt();
-            int end = sc.nextInt();
-            int distance = sc.nextInt();
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int A = Integer.parseInt(st.nextToken());
+            int B = Integer.parseInt(st.nextToken());
+            int C = Integer.parseInt(st.nextToken());
 
-            graph.get(start).add(new Node(end, distance));
-            graph.get(end).add(new Node(start, distance));
+            map.get(A).add(new Node(B, C));
+            map.get(B).add(new Node(A, C));
         }
-        S = sc.nextInt();
-        T = sc.nextInt();
+        st = new StringTokenizer(br.readLine());
+        int S = Integer.parseInt(st.nextToken());
+        int T = Integer.parseInt(st.nextToken());
 
-
-        solve();
-        System.out.println(distanceDP[T]);
+        System.out.println(solve(S, T));
     }
 
-    public static void solve() {
-        distanceDP = new int[N + 1];
-        Arrays.fill(distanceDP, Integer.MAX_VALUE);
-        PriorityQueue<Node> pq = new PriorityQueue<>();
 
-        distanceDP[S] = 0;
-        pq.offer(new Node(S, 0));
+    private static int solve(int S, int T) {
+        int[] dp = new int[N + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        PriorityQueue<Node> queue = new PriorityQueue<>();
+        queue.offer(new Node(S, 0));
 
-        while (!pq.isEmpty()) {
-            Node node = pq.poll();
-            int index = node.index;
-            int distance = node.distance;
+        while (!queue.isEmpty()) {
+            Node curNode = queue.poll();
 
-            if (distanceDP[index] < distance) {
+            if(dp[curNode.index] < curNode.dis){
                 continue;
             }
+            dp[curNode.index] = curNode.dis;
 
-            for (int i = 0; i < graph.get(index).size(); i++) {
-                int cost = graph.get(index).get(i).getDistance() + distanceDP[index];
-
-                if (distanceDP[graph.get(index).get(i).getIndex()] > cost) {
-                    distanceDP[graph.get(index).get(i).getIndex()] = cost;
-                    pq.add(new Node(graph.get(index).get(i).getIndex(), cost));
-                }
+            for (Node nextNode : map.get(curNode.index)) {
+                queue.offer(new Node(nextNode.index, curNode.dis + nextNode.dis));
             }
         }
+
+        return dp[T];
     }
 
-
-    public static class Node implements Comparable<Node> {
-
+    private static class Node implements Comparable<Node> {
         int index;
-        int distance;
+        int dis;
 
-        public int getDistance() {
-            return distance;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-
-        public Node(int index, int distance) {
+        public Node(int index, int dis) {
             this.index = index;
-            this.distance = distance;
+            this.dis = dis;
         }
 
         @Override
         public int compareTo(Node o) {
-            if (this.distance < o.distance) {
-                return -1;
-            }
-            return 1;
+            return Integer.compare(dis, o.dis);
         }
     }
+
 }
