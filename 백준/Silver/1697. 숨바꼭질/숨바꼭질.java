@@ -43,7 +43,7 @@ public class Main {
             if(curNode.index > 0){
                 queue.offer(new Node(curNode.index-1, curNode.count + 1));
             }
-            if(curNode.index < 100_000){
+            if(curNode.index < k){
                 queue.offer(new Node(curNode.index+1, curNode.count + 1));
             }
             if(curNode.index*2 <= 200_000){
