@@ -66,7 +66,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); // 입력을 위한 버퍼리더
         StringBuilder sb = new StringBuilder(); // 출력을 위한 스트링빌더
-
         StringTokenizer st = new StringTokenizer(br.readLine());// 입력을 나누기 위해 StringTokenizer로 입력받는다.
 
         int R = Integer.parseInt(st.nextToken()); //  R입력받는다
@@ -87,9 +86,8 @@ public class Main {
     }
 
     private static List<int[]> solve2(int[] result, char[][] map) {
-        List<int[]> direction = new ArrayList<>();  // 방향을 저장한ㄴ다.
-        int[] M = null;
-        int[] Z = null;
+        List<int[]> direction = new ArrayList<>();  // 방향을 저장한다.
+
         for (int[] dir : Arrays.asList(up, down, left, right)) { // 네가지 방향을 찾는다.
             int nextRow = result[0] + dir[0];
             int nextColumn = result[1] + dir[1];  // 다음에 찾을  row  colmun
@@ -98,17 +96,7 @@ public class Main {
                 continue;
             }
 
-            if (map[nextRow][nextColumn] == '.') { // . 이라면 탐색하지 않는다.
-                continue;
-            }
-
-            if (map[nextRow][nextColumn] == 'M') {  // 집과 유치원이라면 방향을 추가해준다.
-                direction.add(dir);
-                M = dir;
-                continue;
-            } else if (map[nextRow][nextColumn] == 'Z') {  // 집과 유치원이라면 방향을 추가해준다.
-                direction.add(dir);
-                Z = dir;
+            if (map[nextRow][nextColumn] == '.' || map[nextRow][nextColumn] == 'M' || map[nextRow][nextColumn] == 'Z') { // . 이라면 탐색하지 않는다.
                 continue;
             }
 
@@ -118,12 +106,6 @@ public class Main {
                 }
             }
         }
-
-        if (M != null && Z != null) {
-            direction.remove(M);
-            direction.remove(Z);
-        }
-
         return direction;
     }
 
@@ -149,7 +131,6 @@ public class Main {
                 }
             }
         }
-
         return null;
     }
 }
