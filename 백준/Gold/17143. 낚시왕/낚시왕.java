@@ -26,7 +26,7 @@ public class Main {
         C = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-       pq = new PriorityQueue<>();
+        pq = new PriorityQueue<>();
 
         while (M-- > 0) {
             st = new StringTokenizer(br.readLine());
@@ -53,7 +53,6 @@ public class Main {
             moveSharks();
             // 상어 > 상어 잡아먹기
             fightSharks();
-            pq.comparator();
         }
     }
 
