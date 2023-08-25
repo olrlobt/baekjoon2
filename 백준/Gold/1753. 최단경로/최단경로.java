@@ -1,95 +1,90 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-    static int V;
-    static int E;
-    static int K;
-    static int[] distanceDP;
-    static final int INF = Integer.MAX_VALUE;
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-    static ArrayList<ArrayList<Node>> gragh = new ArrayList<>();
+        int V = Integer.parseInt(st.nextToken());
+        int E = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(br.readLine()); // 시작
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        ArrayList<ArrayList<Node>> map = new ArrayList<>();
 
-        V = sc.nextInt();
-        E = sc.nextInt();
-        K = sc.nextInt();
-
-        distanceDP = new int[V + 1];
-        Arrays.fill(distanceDP, INF);
         for (int i = 0; i <= V; i++) {
-            gragh.add(new ArrayList<>());
+            map.add(new ArrayList<>());
         }
 
-        for (int line = 0; line < E; line++) {
-            int start = sc.nextInt();
-            int end = sc.nextInt();
-            int distance = sc.nextInt();
+        for (int i = 0; i < E; i++) {
+            st = new StringTokenizer(br.readLine());
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
 
-            gragh.get(start).add(new Node(end, distance));
+            map.get(u).add(new Node(v, w));
         }
 
-        solve();
+        int[] result = solve(map, K);
 
-        for (int i = 1; i <= V; i++) {
-            if (distanceDP[i] == INF) {
-                System.out.println("INF");
+        for (int i = 1; i < result.length; i ++) {
+            if (result[i] == -1) {
+                sb.append("INF").append("\n");
                 continue;
             }
-            System.out.println(distanceDP[i]);
+            sb.append(result[i]).append("\n");
         }
-
+        System.out.println(sb);
     }
 
-    public static void solve() {
+    private static int[] solve(ArrayList<ArrayList<Node>> map, int k) {
+
+        int[] dp = new int[map.size()];
+        Arrays.fill(dp, -1);
 
         PriorityQueue<Node> pq = new PriorityQueue<>();
-        boolean[] check = new boolean[V + 1];
-        pq.add(new Node(K, 0));
-        distanceDP[K] = 0;
+        pq.offer(new Node(k, 0));
 
         while (!pq.isEmpty()) {
-            Node curNode = pq.poll();
-            int index = curNode.index;
 
-            if (check[index]) {
+            Node curNode = pq.poll();
+
+            if (dp[curNode.index] != -1) {
                 continue;
             }
-            check[index] = true;
+            dp[curNode.index] = curNode.dis;
 
-            for(Node node : gragh.get(index)){
-                int cost = node.distance;
 
-                if (distanceDP[node.index] > cost + distanceDP[index]) {
-                    distanceDP[node.index] = cost + distanceDP[index];
-                    pq.add(new Node(node.index, distanceDP[node.index]));
-                }
-
+            for (Node nextNode : map.get(curNode.index)) {
+                pq.offer(new Node(nextNode.index, curNode.dis + nextNode.dis));
             }
         }
+
+        return dp;
     }
+
 
     private static class Node implements Comparable<Node> {
 
         int index;
-        int distance;
+        int dis;
 
-        public Node(int index, int distance) {
+        public Node(int index, int dis) {
             this.index = index;
-            this.distance = distance;
+            this.dis = dis;
         }
+
 
         @Override
         public int compareTo(Node o) {
-            if (this.distance > o.distance) {
-                return 1;
-            }
-            return -1;
+            return Integer.compare(dis, o.dis);
         }
     }
+
+
+
 }
