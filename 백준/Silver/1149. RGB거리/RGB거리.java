@@ -1,5 +1,7 @@
-
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -7,17 +9,19 @@ public class Main {
     static int[][] map;
     static int[][] memo;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
 
-        N = sc.nextInt();
+        N = Integer.parseInt(br.readLine());
         map = new int[N][3];
         memo = new int[N][3];
 
         for (int home = 0; home < N; home++) {
-            map[home][0] = sc.nextInt();
-            map[home][1] = sc.nextInt();
-            map[home][2] = sc.nextInt();
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            map[home][0] = Integer.parseInt(st.nextToken());
+            map[home][1] = Integer.parseInt(st.nextToken());
+            map[home][2] = Integer.parseInt(st.nextToken());
         }
 
         System.out.println(Math.min(solve(0, 2), Math.min(solve(0, 0), solve(0, 1))));
