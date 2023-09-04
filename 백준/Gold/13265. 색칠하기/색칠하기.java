@@ -50,9 +50,9 @@ public class Main {
                 }
             }
 
-            System.out.println(check ? "possible" : "impossible");
-
+            sb.append(check ? "possible" : "impossible").append("\n");
         }
+        System.out.println(sb);
     }
 
     private static boolean solve(Circle[] map, int index , int sort, int parent) {
