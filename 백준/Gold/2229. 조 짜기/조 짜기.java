@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -23,17 +22,16 @@ public class Main {
         int[] dp = new int[person.length];
 
         for (int num = 1; num < person.length; num++) {
-
             int lastDiff = 0;
-
             dp[num] = dp[num - 1];
+            
             for (int idx = 1; idx < num; idx++) {
-
-                int diff2 = Math.abs(person[num] - person[num - idx]);
-                if (diff2 > lastDiff) {
-                    lastDiff = diff2;
-                    dp[num] = Math.max(dp[num], dp[num - idx - 1] + lastDiff);
+                int diff2;
+                if ((diff2 = Math.abs(person[num] - person[num - idx])) <= lastDiff) {
+                    break;
                 }
+                lastDiff = diff2;
+                dp[num] = Math.max(dp[num], dp[num - idx - 1] + lastDiff);
             }
         }
         return dp[person.length-1];
