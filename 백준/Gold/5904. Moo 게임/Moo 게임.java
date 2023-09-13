@@ -1,45 +1,39 @@
-
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
 
-    static int N;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        N = sc.nextInt();
-        solve(0, 3);
-
+        System.out.println(solve(N));
     }
 
-    private static int solve(int S, int size) {
-        if (N <= size) {
-            moo(S, size);
-            return 0;
+    private static String solve(int N) {
+
+        int index = 0;
+        int length = 3;
+
+        while (length < N){
+            index ++;  // 0 3
+            length = length * 2 + index + 3 ;
         }
-        return solve(S + 1, size * 2 + S + 4);
-    }
 
-
-    private static void moo(int S, int size) {
-
-        int preSize = (size - 3 - S) / 2;
-
-        if (N < preSize) { //좌측
-            moo(S - 1, preSize);
-
-        } else if (N > preSize + S + 3) { // 우측
-
-            N = N - preSize - S - 3;
-            moo(S - 1, preSize);
-        } else { // 중앙
-
-            if (N - preSize == 1) {
-                System.out.println("m");
-            } else {
-                System.out.println("o");
+        while (length > 3){
+            int preLength = (length - (index + 3))/2;
+            if (preLength > N) {
+                length = preLength;
+            }else if(preLength + index + 3 < N) {
+                length = preLength;
+                N -= (preLength + index + 3);
+            }else{
+                return N - preLength == 1 ? "m" : "o";
             }
+            index --;
         }
+
+        return N == 1 ? "m" : "o";
     }
 }
