@@ -16,24 +16,21 @@ public class Main {
         int index = 0;
         int length = 3;
 
-        while (length < N){
-            index ++;  // 0 3
-            length = length * 2 + index + 3 ;
+        while (length < N) {
+            index++;  // 0 3
+            length = length * 2 + index + 3;
         }
 
-        while (length > 3){
-            int preLength = (length - (index + 3))/2;
-            if (preLength > N) {
-                length = preLength;
-            }else if(preLength + index + 3 < N) {
-                length = preLength;
-                N -= (preLength + index + 3);
-            }else{
-                return N - preLength == 1 ? "m" : "o";
+        while (length > 3) {
+            length = (length - (index + 3)) / 2;
+
+            if (length + index + 3 >= N && length < N ) {
+                return N - length == 1 ? "m" : "o";
+            }else if(length < N){
+                N -= length + index + 3;
             }
-            index --;
+            index--;
         }
-
         return N == 1 ? "m" : "o";
     }
 }
