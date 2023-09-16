@@ -1,29 +1,32 @@
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
     static int[] result = new int[3];
     static int[][] map;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-        int N = sc.nextInt();
+        int N = Integer.parseInt(br.readLine());
         map = new int[N][N];
 
         for (int row = 0; row < N; row++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
             for (int column = 0; column < N; column++) {
-                map[row][column] = sc.nextInt();
+                map[row][column] = Integer.parseInt(st.nextToken());
             }
         }
 
         solve(0, 0, N);
-
-        for(int i = 0 ; i < 3 ; i ++){
-
-            System.out.println(result[i]);
-        }
+        Arrays.stream(result).forEach(value -> sb.append(value).append("\n"));
+        System.out.println(sb);
     }
 
     public static void solve(int x, int y, int size) {
@@ -35,18 +38,11 @@ public class Main {
 
         size /= 3;
 
-        solve(x, y, size);
-        solve(x, y + size, size);
-        solve(x, y + size * 2, size);
-
-        solve(x + size, y, size);
-        solve(x + size, y + size, size);
-        solve(x + size, y + size * 2, size);
-
-        solve(x + size * 2, y, size);
-        solve(x + size * 2, y + size, size);
-        solve(x + size * 2, y + size * 2, size);
-
+        for(int X_idx = 0; X_idx < 3 ; X_idx ++){
+            for (int Y_idx = 0; Y_idx < 3; Y_idx++) {
+                solve(x + size * X_idx, y + size *Y_idx, size);
+            }
+        }
     }
 
     private static boolean paper(int x, int y, int size) {
