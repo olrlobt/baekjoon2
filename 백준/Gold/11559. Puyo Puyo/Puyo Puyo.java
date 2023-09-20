@@ -3,23 +3,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Main {
 
     static final int MAX_ROW = 12;
     static final int MAX_COLUMN = 6;
-    static final int[] COLOR = {'R', 'G', 'B', 'P', 'Y'};
-
     static final int[] dx = {1, 0, -1, 0};
     static final int[] dy = {0, 1, 0, -1};
 
     static List<LinkedList<Character>> map;
-
-    static int result = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -36,55 +32,57 @@ public class Main {
                 map.get(column).addFirst(input.charAt(column));
             }
         }
-
-        solve();
-        System.out.println(result);
+        System.out.println(solve());
     }
 
-    private static void solve() {
-
-        boolean[][] puyo = new boolean[MAX_ROW][MAX_COLUMN];
+    private static int solve() {
+        PriorityQueue<int[]> puyo = new PriorityQueue<>((o1, o2) -> o2[0] - o1[0]);
+        int result = 0;
 
         while (true) {
-            boolean loop = false;
-            for (int row = 0; row < MAX_ROW; row++) {
-                for (int column = 0; column < MAX_COLUMN; column++) {
-
-                    if (row >= map.get(column).size() || !isCOLOR(row, column)) {
-                        continue;
-                    }
-                    if (bfs(map.get(column).get(row), row, column, puyo)) {
-                        loop = true;
-                    }
-                }
-            }
-            if(!loop){
+            if (!isPuyo(puyo)) {
                 break;
             }
 
-            for (int col = 0; col < MAX_COLUMN; col++) {
-                for (int ro = MAX_ROW - 1; ro >= 0; ro--) {
-                    if (!puyo[ro][col]) {
-                        continue;
-                    }
-                    puyo[ro][col] = false;
-                    map.get(col).remove(ro);
-                }
+            while (!puyo.isEmpty()) {
+                int[] cur = puyo.poll();
+                map.get(cur[1]).remove(cur[0]);
             }
             result++;
         }
 
-
+        return result;
     }
 
-    private static boolean bfs(char color, int row, int column, boolean[][] puyo) {
-
-        int count = 1;
-
-        Queue<int[]> queue = new ArrayDeque<>();
-        queue.offer(new int[]{row, column});
-
+    private static boolean isPuyo(PriorityQueue<int[]> puyo) {
         boolean[][] visited = new boolean[MAX_ROW][MAX_COLUMN];
+        boolean isPuyo = false;
+
+        for (int row = 0; row < MAX_ROW; row++) {
+            for (int column = 0; column < MAX_COLUMN; column++) {
+
+                if(map.get(column).size() <= row || map.get(column).get(row) == '.'){
+                    continue;
+                }
+
+                List<int[]> count = bfs(row, column, visited);
+                if (count.size() >= 4) {
+                    isPuyo = true;
+                    puyo.addAll(count);
+                }
+            }
+        }
+        return isPuyo;
+    }
+
+    private static List<int[]> bfs(int row, int column, boolean[][] visited) {
+
+        Character color = map.get(column).get(row);
+        Queue<int[]> queue = new ArrayDeque<>();
+        List<int[]> count = new ArrayList<>();
+
+        queue.offer(new int[]{row, column});
+        count.add(new int[]{row, column});
         visited[row][column] = true;
 
         while (!queue.isEmpty()) {
@@ -101,28 +99,10 @@ public class Main {
                     continue;
                 }
                 visited[nextRow][nextColumn] = true;
-
-                count++;
+                count.add(new int[]{nextRow, nextColumn});
                 queue.offer(new int[]{nextRow, nextColumn});
             }
         }
-
-        if (count >= 4) {
-            for (int col = column; col < MAX_COLUMN; col++) {
-                for (int ro = MAX_ROW - 1; ro >= row; ro--) {
-                    if (!visited[ro][col]) {
-                        continue;
-                    }
-                    puyo[ro][col] = true;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-
-    private static boolean isCOLOR(int row, int column) {
-        return Arrays.stream(COLOR).anyMatch(color -> color == map.get(column).get(row));
+        return count;
     }
 }
