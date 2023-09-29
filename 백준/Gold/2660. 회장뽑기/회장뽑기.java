@@ -1,60 +1,81 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
 public class Main {
     public static void main(String[] args) throws IOException {
-        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-        int n=Integer.parseInt(br.readLine());
-        boolean[][] arr=new boolean[n+1][n+1];
+        int N = Integer.parseInt(br.readLine());
 
-        while(true){
-            st=new StringTokenizer(br.readLine());
-            int a=Integer.parseInt(st.nextToken());
-            int b=Integer.parseInt(st.nextToken());
-            if(a==-1&&b==-1) break;
-            arr[a][b]=arr[b][a]=true;
+        int[][] map = new int[N + 1][N + 1];
+
+        for (int row = 1; row < map.length; row++) {
+            Arrays.fill(map[row], 51);
         }
 
+        while (true) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
 
-        int score[]=new int[n+1];
-        int min=Integer.MAX_VALUE;
-        boolean visit[]=new boolean[n+1];
+            if (a == -1) {
+                break;
+            }
 
-        Queue<Integer> q=new LinkedList<>();
-        for(int i=1;i<=n;i++) {
-            visit[i] = true;
-            q.add(i);
-            int friends=1;
-            int t=0;
-            while(friends<n) {
-                ++t;
-                int size = q.size();
-                while (size-- > 0) {
-                    int p = q.poll();
-                    for (int j = 1; j <= n; j++) {
-                        if (arr[p][j]&&!visit[j]) {
-                            visit[j] = true;
-                            q.add(j);
-                            ++friends;
-                        }
+            map[a][b] = map[b][a] = 1;
+        }
+
+        Queue<Integer> solve = solve(map);
+
+        sb.append(map[solve.peek()][0]).append(" ").append(solve.size()).append("\n");
+        while (!solve.isEmpty()) {
+            sb.append(solve.poll()).append(" ");
+        }
+        System.out.println(sb);
+    }
+
+    private static Queue<Integer> solve(int[][] map) {
+
+        for (int k = 1; k < map.length; k++) {
+            map[k][k] = 0;
+            map[k][0] = 0;
+            for (int row = 1; row < map.length; row++) {
+                if (k == row) {
+                    continue;
+                }
+                for (int column = 1; column < map.length; column++) {
+                    if (row == column || k == column) {
+                        continue;
                     }
+                    map[row][column] = Math.min(map[row][column], map[row][k] + map[k][column]);
                 }
             }
-            score[i]=t;
-            min=min>t?t:min;
-            q.clear();
-            Arrays.fill(visit,false);
         }
-        StringBuilder sb=new StringBuilder();
-        int cnt=0;
-        for(int i=1;i<=n;i++){
-            if(score[i]==min){
-                ++cnt;
-                sb.append(i+" ");
+
+        int min = 51;
+
+        Queue<Integer> pq = new ArrayDeque<>();
+
+        for (int row = 1; row < map.length; row++) {
+            map[row][0] = Arrays.stream(map[row]).max().getAsInt();
+
+            if(min < map[row][0]){
+                continue;
+            } else if (min > map[row][0]) {
+                pq.clear();
+                min = map[row][0];
+                pq.offer(row);
+                continue;
             }
+            pq.offer(row);
         }
-        System.out.println(min+" "+cnt);
-        System.out.print(sb.toString());
+
+        return pq;
     }
 }
