@@ -31,7 +31,7 @@ public class Solution {
         System.out.println(sb);
     }
 
-    private static long solve(boolean[][] map) {
+    private static int solve(boolean[][] map) {
 
         int[] count = new int[map.length];
         boolean[] visited = new boolean [map.length];
@@ -75,6 +75,12 @@ public class Solution {
             }
         }
 
-        return Arrays.stream(count).filter(value -> value == count.length-2).count();
+        int sum = 0 ;
+        for (int i = 1; i < count.length; i++) {
+            if (count[i] == count.length - 2) {
+                sum ++;
+            }
+        }
+        return sum;
     }
 }
