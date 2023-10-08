@@ -1,61 +1,64 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+    static int[] color;
+    static int N;
 
-        int[] boseok = new int[M];
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-        for (int num = 0; num < M; num++) {
-            int A = Integer.parseInt(br.readLine());
-            boseok[num] = A;
+        N = sc.nextInt(); // 아이 수
+        int M = sc.nextInt(); // color
+        color = new int[M];
+        int max = 0;
+        for (int c = 0; c < M; c++) {
+            color[c] = sc.nextInt();
+            if(color[c] > max){
+                max = color[c];
+            }
         }
 
-        System.out.println(solve(boseok, N));
+        solve(max);
     }
 
-    private static int solve(int[] boseok, int n) {
+    public static void solve(int max) {
 
-        Arrays.sort(boseok);
+        int low = 1;
+        int high = max;
 
-        int low = 0;
-        int high = boseok[boseok.length - 1];
-        int mid = 0;
+        while (low < high){
 
-        while (low + 1 < high) {
+            int mid = (low + high) / 2;
 
-            mid = (low + high) / 2;
+            if(count(mid) > N){
 
-            if (n >= count(mid, boseok)) {
+                low = mid + 1 ;
+
+            }else{
+
                 high = mid;
-            } else {
-                low = mid;
             }
+
         }
 
-        return high;
+        System.out.println(low);
+
     }
 
-    private static int count(int mid, int[] boseok) {
+    public static int count(int mid){
 
-        int sum = 0;
+        int count = 0 ;
 
-        for (int bo : boseok) {
+        for(int i : color){
 
-            sum += bo / mid;
-            if (bo % mid != 0) {
-                sum ++;
+            count += i/mid;
+
+            if(i%mid > 0){
+                count++;
             }
         }
-
-        return sum;
+        return count;
     }
 }
