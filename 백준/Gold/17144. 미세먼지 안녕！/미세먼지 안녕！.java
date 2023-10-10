@@ -43,7 +43,7 @@ public class Main {
         while (t-- > 0) {
 
             for (int row = 0; row < map.length; row++) {
-                Arrays.fill(tempMap[row], 0);
+                System.arraycopy(map[row], 0, tempMap[row], 0, map[0].length);
             }
 
             for (int row = 0; row < map.length; row++) {
@@ -51,7 +51,7 @@ public class Main {
                     if (map[row][column] <= 0) {
                         continue;
                     }
-                    int count = 0;
+                    int diff = map[row][column] / 5;
 
                     for (int i = 0; i < 4; i++) {
                         int nextRow = row + dy[i];
@@ -61,10 +61,10 @@ public class Main {
                                 || (nextColumn == 0 && (nextRow == cleanerRow || nextRow == cleanerRow + 1))) {
                             continue;
                         }
-                        count++;
-                        tempMap[nextRow][nextColumn] += map[row][column] / 5;
+
+                        tempMap[row][column] -= diff;
+                        tempMap[nextRow][nextColumn] += diff;
                     }
-                    tempMap[row][column] += map[row][column] - map[row][column] / 5 * count;
                 }
             }
 
@@ -101,7 +101,6 @@ public class Main {
                 System.arraycopy(tempMap[row], 1, map[row], 1, map[0].length - 2);
             }
         }
-
         return clean;
     }
 }
