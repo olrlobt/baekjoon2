@@ -75,6 +75,7 @@ public class Main {
             for (int row = 1; row < cleanerRow; row++) {
                 map[row][0] = tempMap[row - 1][0];
                 map[row][map[0].length - 1] = tempMap[row + 1][map[0].length - 1];
+                System.arraycopy(tempMap[row], 1, map[row], 1, map[0].length - 2);
             }
             clean += tempMap[cleanerRow - 1][0];
             map[0][map[0].length - 1] = tempMap[1][map[0].length - 1];
@@ -87,19 +88,13 @@ public class Main {
             for (int row = cleanerRow + 2; row < map.length - 1; row++) {
                 map[row][map[0].length - 1] = tempMap[row - 1][map[0].length - 1];
                 map[row][0] = tempMap[row + 1][0];
+                System.arraycopy(tempMap[row], 1, map[row], 1, map[0].length - 2);
             }
 
             clean += tempMap[cleanerRow + 2][0];
             map[map.length - 1][map[0].length - 1] = tempMap[map.length - 2][map[0].length - 1];
             map[cleanerRow + 1][1] = 0;
-
-
-            for (int row = 1; row < cleanerRow; row++) {
-                System.arraycopy(tempMap[row], 1, map[row], 1, map[0].length - 2);
-            }
-            for (int row = cleanerRow + 2; row < map.length - 1; row++) {
-                System.arraycopy(tempMap[row], 1, map[row], 1, map[0].length - 2);
-            }
+            
         }
         return clean;
     }
