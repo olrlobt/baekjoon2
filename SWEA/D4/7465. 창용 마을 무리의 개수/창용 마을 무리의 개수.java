@@ -1,53 +1,74 @@
-
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Solution {
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int T = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+
+        int T = Integer.parseInt(br.readLine());
 
         for (int testCase = 1; testCase <= T; testCase++) {
-            int N = sc.nextInt();
-            int M = sc.nextInt();
-            int count = 0;
+
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int N = Integer.parseInt(st.nextToken());
+            int M = Integer.parseInt(st.nextToken());
+            Node[] map = new Node[N + 1];
+
+            for (int num = 0; num <= N; num++) {
+                map[num] = new Node(num, null);
+            }
+
+            for (int idx = 0; idx < M; idx++) {
+                st = new StringTokenizer(br.readLine());
+
+                int a = Integer.parseInt(st.nextToken());
+                int b = Integer.parseInt(st.nextToken());
+
+                map[a].next = new Node(b, map[a].next);
+                map[b].next = new Node(a, map[b].next);
+            }
+
             boolean[] visited = new boolean[N + 1];
-            ArrayList<ArrayList<Integer>> relations = new ArrayList<>();
-
-            for (int i = 0; i <= N; i++) {
-                relations.add(new ArrayList<>());
-            }
-
-            for (int number = 0; number < M; number++) {
-                int person1 = sc.nextInt();
-                int person2 = sc.nextInt();
-
-                relations.get(person1).add(person2);
-                relations.get(person2).add(person1);
-            }
-
-            for (int start = 1; start <= N; start++) {
-                if (visited[start]) {
+            int count = 0;
+            for (int idx = 1; idx <= N; idx++) {
+                if (visited[idx]) {
                     continue;
                 }
-                checkRelation(start, visited, relations);
+                visited[idx] = true;
+                solve(idx, map, visited);
                 count++;
             }
+            sb.append("#").append(testCase).append(" ").append(count).append("\n");
+        }
+        System.out.println(sb);
 
-            System.out.println("#" + testCase + " " + count);
+    }
+
+    private static void solve(int idx, Node[] map, boolean[] visited) {
+
+        for (Node next = map[idx].next; next != null; next = next.next) {
+
+            if (visited[next.idx]) {
+                continue;
+            }
+            visited[next.idx] = true;
+
+            solve(next.idx, map, visited);
         }
     }
 
-    private static void checkRelation(int curNum, boolean[] visited, ArrayList<ArrayList<Integer>> relations) {
+    private static class Node {
 
-        visited[curNum] = true;
+        int idx;
+        Node next;
 
-        for (int nextNum : relations.get(curNum)) {
-            if (visited[nextNum]) {
-                continue;
-            }
-            checkRelation(nextNum, visited, relations);
+        public Node(int idx, Node next) {
+            this.idx = idx;
+            this.next = next;
         }
     }
 }
