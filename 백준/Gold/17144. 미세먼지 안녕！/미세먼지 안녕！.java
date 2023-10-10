@@ -10,7 +10,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         int R = Integer.parseInt(st.nextToken());
@@ -19,29 +18,26 @@ public class Main {
 
         int[][] map = new int[R][C];
         int sum = 2;
+        int cleanerRow = 0;
+
         for (int row = 0; row < R; row++) {
             st = new StringTokenizer(br.readLine());
+
             for (int column = 0; column < C; column++) {
-                map[row][column] = Integer.parseInt(st.nextToken());
-                sum += map[row][column];
+                sum += map[row][column] = Integer.parseInt(st.nextToken());
             }
-        }
 
-        System.out.println(sum - solve(map, T));
-    }
-
-
-    private static int solve(int[][] map, int t) {
-
-        int clean = 0;
-        int cleanerRow = 0;
-        for (int row = 0; row < map.length; row++) {
             if (map[row][0] == -1) {
                 cleanerRow = row;
-                break;
             }
         }
 
+        System.out.println(sum - solve(map, T, cleanerRow - 1));
+    }
+
+    private static int solve(int[][] map, int t, int cleanerRow) {
+
+        int clean = 0;
         int[][] tempMap = new int[map.length][map[0].length];
 
         while (t-- > 0) {
