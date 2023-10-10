@@ -1,45 +1,28 @@
+import java.util.*;
 
-import java.util.Arrays;
-import java.util.Scanner;
+public class Main { // 1912. 연속합 35%
 
-public class Main {
+	public static void main(String[] args) throws Exception {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		sc.nextLine();	
+		int[] arr = new int[n];
+		// Input
+		for (int num = 0; num < n; num++) {			
+			arr[num] = sc.nextInt();			
+		}
+		int [] dp = new int [n];
+		dp[0] = arr[0];
+		int max = dp[0];
+		// Logic
+		for(int i = 1; i<n; i++) { // i별 최대값을 저장.
+			dp[i] = Math.max(arr[i], dp[i-1] + arr[i]); // i-1 최대값 + 다음값이랑 현재값 비교
+			max = (dp[i] >= max ) ? dp[i] : max;
+		}
+		
+		// Output
+		System.out.println(max);
 
-    static int[] dp;
-    static int[] map;
-    static int N;
-    static int max;
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        N = sc.nextInt();
-        map = new int[N];
-        dp = new int[N];
-        for (int num = 0; num < N; num++) {
-            map[num] = sc.nextInt();
-        }
-
-        for (int num = 0; num < N; num++) {
-            solve(num);
-        }
-
-        System.out.println(max);
-    }
-
-    public static void solve(int num) {
-
-        if (num == 0) {
-            dp[num] = map[num];
-            max = dp[num];
-            return;
-        }
-
-        if (dp[num - 1] + map[num] > map[num]){
-            dp[num] = dp[num - 1] + map[num];
-        }else{
-            dp[num] = map[num];
-        }
-
-        max = Math.max(max , dp[num]);
-    }
-}
+		sc.close();
+	}// main
+}// solution
