@@ -1,110 +1,117 @@
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-    static int[][] map;
-    static int N;
-    static int L;
-    static int R;
-    static int[] dx = {1, 0, -1, 0};
-    static int[] dy = {0, -1, 0, 1};
-    static boolean[][] visited;
-    static boolean move = true;
+    static final int[] dx = {1, 0, -1, 0};
+    static final int[] dy = {0, -1, 0, 1};
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        N = sc.nextInt();
-        L = sc.nextInt();
-        R = sc.nextInt();
-        map = new int[N][N];
+        int N = Integer.parseInt(st.nextToken());
+        int L = Integer.parseInt(st.nextToken());
+        int R = Integer.parseInt(st.nextToken());
 
+        int[][] map = new int[N][N];
         for (int row = 0; row < N; row++) {
+            st = new StringTokenizer(br.readLine());
+
             for (int column = 0; column < N; column++) {
-                map[row][column] = sc.nextInt();
+                map[row][column] = Integer.parseInt(st.nextToken());
             }
         }
 
-        int day = -1;
-        while (move) {
-            visited = new boolean[N][N];
-            move = false;
-            day ++;
+        System.out.println(solve(map, L, R));
+    }
 
-            for (int row = 0; row < N; row++) {
-                for (int column = 0; column < N; column++) {
-                    if (visited[row][column]) {
+    private static int solve(int[][] map, int l, int r) {
+
+        int[][] sorted = new int[map.length][map.length];
+        ArrayList<Integer> avg = new ArrayList<>();
+        int day = 0;
+        boolean IsChange = true;
+
+        while (IsChange) {
+            IsChange = false;
+            int sort = 1;
+            avg.clear();
+
+            for (int row = 0; row < map.length; row++) {
+                Arrays.fill(sorted[row], 0);
+            }
+
+            for (int row = 0; row < map.length; row++) {
+                for (int column = 0; column < map.length; column++) {
+
+                    if (sorted[row][column] != 0) {
                         continue;
                     }
-                    solve(row, column);
+
+                    Queue<Node> queue = new ArrayDeque<>();
+                    queue.offer(new Node(row, column));
+
+                    int sum = map[row][column];
+                    int count = 0;
+
+                    while (!queue.isEmpty()) {
+                        Node curNode = queue.poll();
+
+                        sorted[curNode.row][curNode.column] = sort;
+                        count++;
+
+                        for (int i = 0; i < 4; i++) {
+                            int nextRow = curNode.row + dy[i];
+                            int nextColumn = curNode.column + dx[i];
+
+                            if (nextRow >= map.length || nextColumn >= map.length || nextRow < 0 || nextColumn < 0
+                                    || sorted[nextRow][nextColumn] != 0) {
+                                continue;
+                            }
+                            int diff = Math.abs(map[curNode.row][curNode.column] - map[nextRow][nextColumn]);
+
+                            if (diff < l || diff > r) {
+                                continue;
+                            }
+                            sorted[nextRow][nextColumn] = sort;
+                            sum += map[nextRow][nextColumn];
+                            queue.offer(new Node(nextRow, nextColumn));
+                        }
+                    }
+
+                    avg.add(sum / (count));
+                    sort++;
                 }
             }
 
 
-        }
-
-        System.out.println(day);
-    }
-
-    public static void solve(int y, int x) {
-        Queue<Country> pq = new LinkedList<>();
-        ArrayList<Country> arr = new ArrayList<>();
-        pq.offer(new Country(x, y));
-
-        while (!pq.isEmpty()) {
-            Country curCountry = pq.poll();
-
-            if (visited[curCountry.y][curCountry.x]) {
-                continue;
-            }
-            visited[curCountry.y][curCountry.x] = true;
-            arr.add(new Country(curCountry.x,curCountry.y));
-
-            for (int i = 0; i < 4; i++) {
-                int nextX = curCountry.x + dx[i];
-                int nextY = curCountry.y + dy[i];
-
-                if (nextX < 0 || nextY < 0 || nextX >= N || nextY >= N) {
-                    continue;
+            for (int row = 0; row < map.length; row++) {
+                for (int column = 0; column < map.length; column++) {
+                    if (sorted[row][column] == 0 || map[row][column] == avg.get(sorted[row][column] - 1)) {
+                        continue;
+                    }
+                    IsChange = true;
+                    map[row][column] = avg.get(sorted[row][column] - 1);
                 }
-
-                int gap = Math.abs(map[nextY][nextX] - map[curCountry.y][curCountry.x]);
-                if( gap < L || gap > R ){
-                    continue;
-                }
-
-                pq.offer(new Country(nextX,nextY));
             }
+            day++;
+
         }
 
-        if(arr.size() == 1){
-            return;
-        }
-        move = true;
-        
-        int sum = 0 ;
-        for(Country country : arr){
-            sum += map[country.y][country.x];
-        }
+        return --day;
+    }
 
-        sum /= arr.size();
-        for(Country country : arr){
-            map[country.y][country.x] = sum;
+    private static class Node {
+
+        int row;
+        int column;
+
+        public Node(int row, int column) {
+            this.row = row;
+            this.column = column;
         }
     }
 
-    private static class Country {
-        int x;
-        int y;
 
-        public Country(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-    }
 }
