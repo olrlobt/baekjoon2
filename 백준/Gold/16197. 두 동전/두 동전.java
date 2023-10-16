@@ -1,115 +1,106 @@
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Main {
 
-    static int N;
-    static int M;
-    static Character[][] map;
-    static ArrayList<int[]> coins;
     static final int[] dx = {1, 0, -1, 0};
-    static final int[] dy = {0, -1, 0, 1};
+    static final int[] dy = {0, 1, 0, -1};
+    static char[][] map;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        N = sc.nextInt();
-        M = sc.nextInt();
-        map = new Character[N][M];
-        coins = new ArrayList<>();
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        map = new char[N][M];
+        List<Coin> coin = new ArrayList<>(2);
 
         for (int row = 0; row < N; row++) {
-            String input = sc.next();
+            map[row] = br.readLine().toCharArray();
+
+            if (!Arrays.toString(map[row]).contains("o")) {
+                continue;
+            }
+
             for (int column = 0; column < M; column++) {
-                map[row][column] = input.charAt(column);
-                if (map[row][column] == 'o') {
-                    coins.add(new int[]{row, column});
+                if (map[row][column] != 'o') {
+                    continue;
                 }
+                coin.add(new Coin(row, column));
             }
         }
-
-        System.out.println(solve());
+        System.out.println(solve(coin));
     }
 
-    public static int solve() {
+    private static int solve(List<Coin> coin) {
 
-        Queue<Coin> queue = new LinkedList<>();
-        queue.offer(new Coin(coins.get(0)[0], coins.get(0)[1], coins.get(1)[0], coins.get(1)[1], 0));
-        boolean [][][][] visited = new boolean[N][M][N][M];
-
+        Queue<Coins> queue = new ArrayDeque<>();
+        queue.offer(new Coins(coin.get(0), coin.get(1), 0));
+        boolean[][][][] visited = new boolean[map.length][map[0].length][map.length][map[0].length];
 
         while (!queue.isEmpty()) {
-
-            Coin curCoins = queue.poll();
+            Coins curCoins = queue.poll();
+            Coin coin1 = curCoins.coin1;
+            Coin coin2 = curCoins.coin2;
 
             if (curCoins.count >= 10) {
                 return -1;
             }
-
-            if (visited[curCoins.row1][curCoins.column1][curCoins.row2][curCoins.column2]) {
-                continue;
-            }
-            visited[curCoins.row1][curCoins.column1][curCoins.row2][curCoins.column2] = true;
-
-
+            
             for (int i = 0; i < 4; i++) {
-                int coin1Row = curCoins.row1 + dy[i];
-                int coin1Column = curCoins.column1 + dx[i];
-                int coin2Row = curCoins.row2 + dy[i];
-                int coin2Column = curCoins.column2 + dx[i];
+                int nextRow1 = coin1.row + dy[i];
+                int nextColumn1 = coin1.column + dx[i];
+                int nextRow2 = coin2.row + dy[i];
+                int nextColumn2 = coin2.column + dx[i];
 
-                boolean drop1 = isDrop(coin1Row, coin1Column);
-                boolean drop2 = isDrop(coin2Row, coin2Column);
-
-                if (drop1 || drop2) {
-                    if (drop1 && drop2) {
-                        continue;
-                    }
+                if (isOutside(nextRow1, nextColumn1) ^ isOutside(nextRow2, nextColumn2)) {
                     return curCoins.count + 1;
                 }
 
-                if(map[coin1Row][coin1Column] == '#' && map[coin2Row][coin2Column] == '#'){
-                    continue;
-                }
-                if(map[coin1Row][coin1Column] == '#'){
-                    queue.offer(new Coin(curCoins.row1, curCoins.column1, coin2Row, coin2Column, curCoins.count + 1));
-                    continue;
-                }else if(map[coin2Row][coin2Column] == '#'){
-                    queue.offer(new Coin(coin1Row, coin1Column, curCoins.row2, curCoins.column2, curCoins.count + 1));
+                if ( isOutside(nextRow1, nextColumn1) || visited[nextRow1][nextColumn1][nextRow2][nextColumn2] || map[nextRow1][nextColumn1] == '#' && map[nextRow2][nextColumn2] == '#') {
                     continue;
                 }
 
-                queue.offer(new Coin(coin1Row, coin1Column, coin2Row, coin2Column, curCoins.count + 1));
+                if (map[nextRow1][nextColumn1] == '#') {
+                    nextRow1 = coin1.row;
+                    nextColumn1 = coin1.column;
+                } else if (map[nextRow2][nextColumn2] == '#') {
+                    nextRow2 = coin2.row;
+                    nextColumn2 = coin2.column;
+                }
+                visited[nextRow1][nextColumn1][nextRow2][nextColumn2] = true;
+                queue.offer(new Coins(new Coin(nextRow1, nextColumn1), new Coin(nextRow2, nextColumn2), curCoins.count + 1));
             }
         }
-
         return -1;
     }
 
-    private static boolean isDrop(int row, int column) {
-        if (row < 0 || column < 0 || row >= N || column >= M) {
-            return true;
+    private static boolean isOutside(int nextRow1, int nextColumn1) {
+        return nextRow1 >= map.length || nextColumn1 >= map[0].length || nextRow1 < 0 || nextColumn1 < 0;
+    }
+
+    private static class Coins {
+        Coin coin1;
+        Coin coin2;
+        int count;
+
+        public Coins(Coin coin1, Coin coin2, int count) {
+            this.coin1 = coin1;
+            this.coin2 = coin2;
+            this.count = count;
         }
-        return false;
     }
 
     private static class Coin {
+        int row;
+        int column;
 
-        int row1;
-        int column1;
-        int row2;
-        int column2;
-        int count;
-
-        public Coin(int row1, int column1, int row2, int column2, int count) {
-            this.row1 = row1;
-            this.column1 = column1;
-            this.row2 = row2;
-            this.column2 = column2;
-            this.count = count;
+        public Coin(int row, int column) {
+            this.row = row;
+            this.column = column;
         }
     }
 }
