@@ -1,45 +1,53 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    static int [] map;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        int N = Integer.parseInt(br.readLine());
+        int[] map = new int[N];
 
-        int N = sc.nextInt();
-        map = new int[N];
+        StringTokenizer st = new StringTokenizer(br.readLine());
         for (int num = 0; num < N; num++) {
-            map[num] = sc.nextInt();
+            map[num] = Integer.parseInt(st.nextToken());
         }
+        int[] solve = solve(map);
 
-        solve();
+        sb.append(map[solve[0]]).append(" ").append(map[solve[1]]);
+        System.out.println(sb);
     }
 
-    public static void solve(){
+    private static int[] solve(int[] map) {
 
+        Arrays.sort(map);
+        long sum = Integer.MAX_VALUE;
         int left = 0;
-        int right = map.length-1;
-        int min = Integer.MAX_VALUE;
-        int minx = 0;
-        int miny = 0;
-        while(left<right){
+        int right = map.length - 1;
+        int temp = 0;
+        int[] result = new int[2];
 
-            int sum = map[left] + map[right];
+        while (left < right) {
 
-            if(Math.abs(sum) < min){
-                min = Math.abs(sum);
-                minx = left;
-                miny = right;
+            temp = map[left] + map[right];
+
+            if (Math.abs(temp) < sum) {
+                sum = Math.abs(temp);
+                result[0] = left;
+                result[1] = right;
             }
-            if(sum < 0){
-                left ++;
-            }
-            else {
-                right --;
+
+            if (temp < 0) {
+                left++;
+            } else {
+                right--;
             }
         }
-
-        System.out.println(map[minx] + " " + map[miny]);
+        return result;
     }
 }
