@@ -45,10 +45,10 @@ public class Main {
             part[visited[r][c]]++;
         }
 
-        int result = calCombi(K , 2); // 전체 경우
+        int result = K * (K - 1)  ; // 전체 경우
         int reduce = Arrays.stream(part)
                 .filter(val -> val > 1)
-                .map(val -> calCombi(val, 2))
+                .map(val -> val * (val - 1)  )
                 .reduce(0, Integer::sum);
 
 
@@ -58,20 +58,7 @@ public class Main {
 
 //        System.out.println("Arrays.toString(part) = " + Arrays.toString(part));
 //        System.out.println("result = " + result);
-        System.out.println(result - reduce);
-    }
-
-    private static int calCombi(int N, int R){
-        int result = 1;
-        R = Math.min(R, N - R);
-
-        for (int i = N; i > N - R; i--) {
-            result *= i;
-        }
-        for (int j = 2; j <= R; j++) {
-            result /= j;
-        }
-        return result;
+        System.out.println((result - reduce)/2);
     }
 
     private static int divideLocation() {
@@ -79,11 +66,11 @@ public class Main {
 
         for (int row = 1; row < map.length; row++) {
             for (int column = 1; column < map.length; column++) {
-                if(visited[row][column] != 0){
+                if (visited[row][column] != 0) {
                     continue;
                 }
                 visited[row][column] = sort;
-                solve(row, column, sort ++);
+                solve(row, column, sort++);
             }
         }
 
@@ -113,7 +100,7 @@ public class Main {
         }
     }
 
-    private static class Node{
+    private static class Node {
         int row;
         int column;
 
