@@ -6,7 +6,6 @@ import java.util.*;
 public class Main {
 
     static int[][] map;
-    static int[][] visited;
     static boolean[][][][] road;
     static final int[] dx = {1, 0, -1, 0};
     static final int[] dy = {0, -1, 0, 1};
@@ -20,7 +19,6 @@ public class Main {
         int R = Integer.parseInt(st.nextToken());
 
         map = new int[N][N];
-        visited = new int[N][N];
         road = new boolean[N][N][N][N];
 
         for (int row = 0; row < R; row++) {
@@ -34,51 +32,28 @@ public class Main {
             road[r2][c2][r][c] = true;
         }
 
-        int partNum = divideLocation();
-        int[] part = new int[partNum];
-
         for (int cow = 0; cow < K; cow++) {
             st = new StringTokenizer(br.readLine());
             int r = Integer.parseInt(st.nextToken());
             int c = Integer.parseInt(st.nextToken());
-
-            part[visited[r][c]]++;
+            map[r][c] = -1;
         }
 
-        int result = K * (K - 1)  ; // 전체 경우
-        int reduce = Arrays.stream(part)
-                .filter(val -> val > 1)
-                .map(val -> val * (val - 1)  )
-                .reduce(0, Integer::sum);
-
-
-//        for (int row = 0; row < map.length; row++) {
-//            System.out.println(Arrays.toString(visited[row]));
-//        }
-
-//        System.out.println("Arrays.toString(part) = " + Arrays.toString(part));
-//        System.out.println("result = " + result);
-        System.out.println((result - reduce)/2);
-    }
-
-    private static int divideLocation() {
-        int sort = 1;
+        int result = K * (K - 1); // 전체 경우
 
         for (int row = 1; row < map.length; row++) {
             for (int column = 1; column < map.length; column++) {
-                if (visited[row][column] != 0) {
+                if (map[row][column] != -1) {
                     continue;
                 }
-                visited[row][column] = sort;
-                solve(row, column, sort++);
+                result -= solve(row, column);
             }
         }
-
-        return sort;
+        System.out.println(result / 2);
     }
 
-    private static void solve(int row, int column, int sort) {
-
+    private static int solve(int row, int column) {
+        int count = 0;
         Queue<Node> queue = new ArrayDeque<>();
         queue.offer(new Node(row, column));
 
@@ -91,13 +66,18 @@ public class Main {
                 int nextColumn = curNode.column + dx[dir];
 
                 if (nextRow < 1 || nextColumn < 1 || nextRow >= map.length || nextColumn >= map.length
-                        || visited[nextRow][nextColumn] != 0 || road[curNode.row][curNode.column][nextRow][nextColumn]) {
+                        || map[nextRow][nextColumn] == 1 || road[curNode.row][curNode.column][nextRow][nextColumn]) {
                     continue;
                 }
-                visited[nextRow][nextColumn] = sort;
+                if (map[nextRow][nextColumn] == -1) {
+                    count++;
+                }
+                map[nextRow][nextColumn] = 1;
                 queue.offer(new Node(nextRow, nextColumn));
             }
         }
+
+        return count * (count - 1);
     }
 
     private static class Node {
