@@ -7,13 +7,13 @@ import java.util.StringTokenizer;
 public class Main {
 
     static String[] strings;
-    static int flag;
     static int L;
+
+    static final String NONE = "NONE";
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder("NONE");
-
+        StringBuilder sb = new StringBuilder(NONE);
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         L = Integer.parseInt(st.nextToken());
@@ -28,21 +28,18 @@ public class Main {
 
         for (int idx = 0; idx < strings.length; idx++) {
             mabangjin[0] = strings[idx];
-            flag |= (1 << idx);
-            if(solve(mabangjin, 1)){
+            if(solve(mabangjin, 1, (1 << idx))){
                 sb = new StringBuilder();
                 for (String s : mabangjin) {
                     sb.append(s).append("\n");
                 }
                 break;
             }
-            flag &= ~(1 << idx);
         }
-
         System.out.println(sb);
     }
 
-    private static boolean solve(String[] mabangjin, int curIdx) {
+    private static boolean solve(String[] mabangjin, int curIdx, int flag) {
         if (curIdx >= L ) {
             return true;
         }
@@ -53,15 +50,10 @@ public class Main {
                 continue;
             }
             mabangjin[curIdx] = strings[idx];
-            if(!isOK(mabangjin, curIdx)){
-                continue;
-            }
 
-            flag |= (1 << idx);
-            if (solve(mabangjin, curIdx + 1)) {
+            if (isOK(mabangjin, curIdx) && solve(mabangjin, curIdx + 1, flag | (1 << idx))) {
                 return true;
             }
-            flag &= ~(1 << idx);
         }
         return false;
     }
