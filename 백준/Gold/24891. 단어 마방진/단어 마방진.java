@@ -53,10 +53,14 @@ public class Main {
 
         for (int idx = 0; idx < strings.length; idx++) {
 
-            if (visited[idx] || !isOK(mabangjin, nextIdx, strings[idx])) {
+            if (visited[idx]) {
                 continue;
             }
             mabangjin[nextIdx] = strings[idx];
+            if(!isOK(mabangjin, nextIdx)){
+                continue;
+            }
+
             visited[idx] = true;
             if (solve(mabangjin, nextIdx)) {
                 return true;
@@ -66,10 +70,10 @@ public class Main {
         return false;
     }
 
-    private static boolean isOK(String[] mabangjin, int nextIdx, String target) {
+    private static boolean isOK(String[] mabangjin, int nextIdx) {
 
-        for (int row = 0; row < nextIdx; row++) {
-            if (target.charAt(row) != mabangjin[row].charAt(nextIdx)) {
+        for (int row = 0; row < nextIdx ; row++) {
+            if (mabangjin[nextIdx].charAt(row) != mabangjin[row].charAt(nextIdx)) {
                 return false;
             }
         }
