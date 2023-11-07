@@ -1,61 +1,61 @@
-import java.util.LinkedList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.Queue;
-import java.util.Scanner;
 
 public class Main {
 
-    static int N;
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        N = sc.nextInt();
-
-        solve();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println(solve(Integer.parseInt(br.readLine())));
     }
 
-    public static void solve(){
+    private static int solve(int goal) {
 
-        Queue<Node> queue = new LinkedList<>();
-        queue.offer(new Node(1, 0, 0));
-        boolean[][] visited = new boolean[1001][1001];
-        visited[1][0] = true;
+        Queue<Emoji> queue = new ArrayDeque<>();
+        queue.offer(new Emoji(1, 0, 0));
+        boolean[] visited = new boolean[1001];
 
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
 
-            Node curNode = queue.poll();
+            Emoji curEmoji = queue.poll();
 
-
-            if(curNode.index == N){
-                System.out.println(curNode.count);
-                return;
+            if (curEmoji.num == goal) {
+                return curEmoji.time;
             }
 
-            if(curNode.clip != curNode.index){ // 1 클립 저장
-                queue.offer(new Node(curNode.index ,curNode.count + 1, curNode.index));
-            }
-            if(curNode.clip != 0 && curNode.index + curNode.clip < 1001 && !visited[curNode.index + curNode.clip][curNode.clip]){ // 2 붙여넣기
-                queue.offer(new Node(curNode.index + curNode.clip ,curNode.count + 1, curNode.clip));
-                visited[curNode.index + curNode.clip][curNode.clip] = true;
-            }
-            if(curNode.index > 1 && !visited[curNode.index - 1][curNode.clip]){ // 3
-                queue.offer(new Node(curNode.index - 1, curNode.count + 1, curNode.clip));
-                visited[curNode.index - 1][curNode.clip] = true;
+            // 클립보드 복사
+            if (curEmoji.num != curEmoji.clip && !visited[curEmoji.num]) {
+                visited[curEmoji.num] = true;
+                queue.offer(new Emoji(curEmoji.num, curEmoji.time + 1, curEmoji.num));
             }
 
+            // 붙여넣기
+            if (curEmoji.num + curEmoji.clip <= 1000) {
+                queue.offer(new Emoji(curEmoji.num + curEmoji.clip, curEmoji.time + 1, curEmoji.clip));
+            }
+
+            // 이모지 하나 삭제
+            if (curEmoji.num > 1) {
+                queue.offer(new Emoji(curEmoji.num - 1, curEmoji.time + 1, curEmoji.clip));
+            }
         }
-
+        return 0;
     }
 
-    private static class Node {
-        int index;
-        int count;
-        int clip;
+    private static class Emoji {
 
-        public Node(int index, int count, int clip) {
-            this.index = index;
-            this.count = count;
+        int num; // 이모지 수
+        int time; // 현재 시간
+        int clip; // 클립보드
+
+        public Emoji(int num, int time, int clip) {
+            this.num = num;
+            this.time = time;
             this.clip = clip;
         }
     }
+
+
 }
