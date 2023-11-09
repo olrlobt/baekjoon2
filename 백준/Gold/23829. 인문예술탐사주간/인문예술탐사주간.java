@@ -10,7 +10,6 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
-
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int Q = Integer.parseInt(st.nextToken());
@@ -18,9 +17,9 @@ public class Main {
 
         int[] trees = new int[N];
         long[] sum = new long[N + 1];
+
         for (int num = 0; num < N; num++) {
             trees[num] = Integer.parseInt(st.nextToken());
-
         }
 
         Arrays.sort(trees);
@@ -28,15 +27,10 @@ public class Main {
             sum[num + 1] += sum[num] + trees[num];
         }
 
-
         for (int photoZone = 0; photoZone < Q; photoZone++) {
             long P = Long.parseLong(br.readLine());
             int leftTreeNum = solve(trees, P);
-
-            long l = (P * leftTreeNum) - sum[leftTreeNum];
-            long l1 = (N - leftTreeNum) * P - (sum[N] - sum[leftTreeNum]);
-
-            sb.append(l - l1).append("\n");
+            sb.append(sum[N] - 2 * sum[leftTreeNum] - N * P + 2 * leftTreeNum * P).append("\n");
         }
         System.out.println(sb);
     }
@@ -52,10 +46,12 @@ public class Main {
             mid = (left + right) / 2;
 
 
-            if (trees[mid] <= photoZone) {
+            if (trees[mid] < photoZone) {
                 left = mid;
-            } else {
+            } else if (trees[mid] > photoZone) {
                 right = mid;
+            } else {
+                return mid;
             }
         }
 
