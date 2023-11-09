@@ -1,61 +1,80 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+    static int N, Q, P;
+    static long result;
+    static int[] trees;
+    static long[] sums;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int Q = Integer.parseInt(st.nextToken());
+        StringBuilder sb = new StringBuilder();
+        N = Integer.parseInt(st.nextToken());
+        Q = Integer.parseInt(st.nextToken());
+        trees = new int[N];
+        sums = new long[N];
+
         st = new StringTokenizer(br.readLine());
-
-        int[] trees = new int[N];
-        long[] sum = new long[N + 1];
-
-        for (int num = 0; num < N; num++) {
-            trees[num] = Integer.parseInt(st.nextToken());
+        for (int i = 0; i < N; i++) {
+            trees[i] = Integer.parseInt(st.nextToken());
         }
 
-        Arrays.sort(trees);
-        for (int num = 0; num < N; num++) {
-            sum[num + 1] += sum[num] + trees[num];
+        Arrays.sort(trees); // 정렬
+        // 구간합 구하기
+        sums[0] = trees[0];
+        for (int i = 1; i < N; i++) {
+            sums[i] = sums[i - 1] + trees[i];
         }
+        //System.out.println(Arrays.toString(sums));
 
-        for (int photoZone = 0; photoZone < Q; photoZone++) {
-            long P = Long.parseLong(br.readLine());
-            int leftTreeNum = solve(trees, P);
-            sb.append(sum[N] - 2 * sum[leftTreeNum] - N * P + 2 * leftTreeNum * P).append("\n");
+        for (int i = 0; i < Q; i++) { // 사진 수만큼
+            P = Integer.parseInt(br.readLine());
+            int location = find(P);
+//            System.out.println(location);
+
+            long smallerSum = 0;
+            int smallerCnt = 0;
+            long biggerSum = 0;
+            int bigCnt = 0;
+
+            if (location == 0) {
+                biggerSum = sums[N - 1];
+                bigCnt = N;
+
+            } else {
+                smallerSum = sums[location - 1];
+                smallerCnt = location;
+                biggerSum = sums[N - 1] - sums[location - 1];
+                bigCnt = N - (location);
+            }
+//            long biggerSum = sums[N-1] - sums[location-1];
+//            int bigCnt = N - (location);
+            //System.out.println(smallerSum+" "+smallerCnt);
+            //System.out.println(biggerSum +" "+bigCnt);
+
+            result = 0;
+            result += ((long) P * smallerCnt) - smallerSum;
+            result += biggerSum - ((long) P * bigCnt);
+            sb.append(result).append("\n");
         }
         System.out.println(sb);
     }
 
-    private static int solve(int[] trees, long photoZone) {
+    private static int find(int p) { // 이분 탐색으로 위치 찾기
+        int start = 0;
+        int end = N;
 
-        int left = -1;
-        int right = trees.length;
-        int mid;
-
-        while (left + 1 < right) {
-
-            mid = (left + right) / 2;
-
-
-            if (trees[mid] < photoZone) {
-                left = mid;
-            } else if (trees[mid] > photoZone) {
-                right = mid;
+        while (start < end) {
+            // System.out.println(star`t+" "+mid+" "+end);
+            int mid = (start + end) / 2;
+            if (trees[mid] < p) { // 크면 -> end 이동
+                start = mid + 1;
             } else {
-                return mid;
+                end = mid;
             }
         }
-
-        return right;
+        return end;
     }
-
 }
