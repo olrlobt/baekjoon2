@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
@@ -33,6 +34,7 @@ public class Main {
         Queue<Node> que = new ArrayDeque<>();
         que.add(new Node(arr, 0));
         visited.add(Arrays.hashCode(arr));
+        int last = arr.length - k + 1;
 
         while (!que.isEmpty()) {
             Node curNode = que.poll();
@@ -40,12 +42,13 @@ public class Main {
             if (isSorted(curNode.arr)) {
                 return curNode.count;
             }
-            for (int idx = 0; idx < arr.length - k + 1; idx++) {
+            curNode.count++;
+            for (int idx = 0; idx < last; idx++) {
                 int[] nextArr = swapping(curNode.arr, idx);
                 if (!visited.add(Arrays.hashCode(nextArr))) {
                     continue;
                 }
-                que.offer(new Node(nextArr, curNode.count + 1));
+                que.offer(new Node(nextArr, curNode.count));
             }
         }
         return -1;
@@ -53,13 +56,13 @@ public class Main {
 
     private static int[] swapping(int[] arr, int startIdx) {
         int lastIdx = startIdx + k - 1;
-        arr = Arrays.copyOf(arr, arr.length);
-        for (int idx = 0; idx < k / 2; idx++) {
-            int temp = arr[startIdx + idx];
-            arr[startIdx + idx] = arr[lastIdx - idx];
-            arr[lastIdx - idx] = temp;
+        int[] newArr = new int[arr.length];
+        System.arraycopy(arr, 0, newArr, 0, arr.length);
+
+        for (int idx = 0; idx < k; idx++) {
+            newArr[startIdx + idx] = arr[lastIdx - idx];
         }
-        return arr;
+        return newArr;
     }
 
     private static boolean isSorted(int[] arr) {
