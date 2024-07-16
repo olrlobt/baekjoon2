@@ -21,11 +21,13 @@ public class Solution {
             }
 
             int poll;
-            int i = 1;
+            int i = 0;
             do {
                 poll = queue.poll();
-                poll -= i++;
-                i = i > 5 ? 1 : i;
+//                poll -= i++;
+//                i = i > 5 ? 1 : i;
+                i %= 5;
+                poll -= ++i;
 
                 queue.offer(poll);
             } while (poll > 0);
@@ -34,8 +36,9 @@ public class Solution {
             for (int idx = 0; idx < 7; idx++) {
                 sb.append(queue.poll()).append(" ");
             }
+            queue.poll();
             sb.append(0).append("\n");
-            queue.clear();
+//            queue.clear();
         }
         System.out.println(sb.toString());
     }
