@@ -21,13 +21,13 @@ public class Solution {
             }
 
             int poll;
-            int i = 0;
+            int i = 1;
             do {
                 poll = queue.poll();
-//                poll -= i++;
-//                i = i > 5 ? 1 : i;
-                i %= 5;
-                poll -= ++i;
+                poll -= i++;
+                i = i > 5 ? 1 : i;
+//                i %= 5;
+//                poll -= ++i;
 
                 queue.offer(poll);
             } while (poll > 0);
