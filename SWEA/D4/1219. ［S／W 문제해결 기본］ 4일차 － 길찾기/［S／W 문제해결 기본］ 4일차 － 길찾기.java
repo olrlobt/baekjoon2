@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,16 +47,14 @@ public class Solution {
 
             int cur = queue.poll();
 
+            if (cur == 99) {
+                return true;
+            }
+
             if (map[0][cur] != -1) {
-                if (map[0][cur] == 99) {
-                    return true;
-                }
                 queue.offer(map[0][cur]);
             }
             if (map[1][cur] != -1) {
-                if (map[1][cur] == 99) {
-                    return true;
-                }
                 queue.offer(map[1][cur]);
             }
         }
