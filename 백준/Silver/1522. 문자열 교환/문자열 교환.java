@@ -10,18 +10,34 @@ public class Main {
 
         int min = Integer.MAX_VALUE;
         int len = str.length();
-        int aCnt = (int) str.chars().filter(c -> c == 'a').count();
 
-
-        for (int i = 0; i < len; i++) {
-            int bCnt = 0;
-            for (int j = i; j < i + aCnt; j++) {
-                int idx = j % len;
-                if (str.charAt(idx) == 'b') {
-                    bCnt++;
-                }
+        boolean[] dp = new boolean[len];
+        int aCnt = 0;
+        for (int idx = 0; idx < len; idx++) {
+            if (str.charAt(idx) == 'a') {
+                aCnt++;
+                dp[idx] = true;
             }
-            min = Math.min(min, bCnt);
+        }
+
+        int start = 0;
+        for (int i = 0; i < aCnt; i++) {
+            if (str.charAt(i) == 'b') {
+                start ++;
+            }
+        }
+
+        int maxLen = len + aCnt;
+        int idx;
+        for (int i = aCnt; i < maxLen; i++) {
+            idx = i % len;
+            if(!dp[idx]){
+                start ++;
+            }
+            if(!dp[i - aCnt]){
+                start --;
+            }
+            min = Math.min(min, start);
         }
 
         System.out.println(min);
