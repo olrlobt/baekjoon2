@@ -1,31 +1,29 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		String str = sc.next();
-		
-		int min = Integer.MAX_VALUE;
-		
-		int aCnt = 0;
-		for(int i=0; i<str.length(); i++) {
-			if(str.charAt(i) =='a') {
-				aCnt++;
-			}
-		}
-		
-		for(int i=0; i<str.length(); i++) {
-			int bCnt = 0;
-			for(int j=i; j<i+aCnt; j++) {
-				int idx = j%str.length();
-				if(str.charAt(idx) =='b') {
-					bCnt++;
-				}
-			}
-			min = Math.min(min, bCnt);
-		}
-		
-		System.out.println(min);
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String str = br.readLine();
+
+        int min = Integer.MAX_VALUE;
+        int len = str.length();
+        int aCnt = (int) str.chars().filter(c -> c == 'a').count();
+
+
+        for (int i = 0; i < len; i++) {
+            int bCnt = 0;
+            for (int j = i; j < i + aCnt; j++) {
+                int idx = j % len;
+                if (str.charAt(idx) == 'b') {
+                    bCnt++;
+                }
+            }
+            min = Math.min(min, bCnt);
+        }
+
+        System.out.println(min);
+    }
 }
