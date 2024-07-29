@@ -8,10 +8,8 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String str = br.readLine();
 
-        int min = Integer.MAX_VALUE;
         int len = str.length();
-
-        boolean[] dp = new boolean[len];
+        boolean[] dp = new boolean[2 * len];
         int aCnt = 0;
         for (int idx = 0; idx < len; idx++) {
             if (str.charAt(idx) == 'a') {
@@ -19,25 +17,25 @@ public class Main {
                 dp[idx] = true;
             }
         }
+        System.arraycopy(dp, 0, dp, len, len);
 
-        int start = 0;
+        int min = 0;
         for (int i = 0; i < aCnt; i++) {
             if (str.charAt(i) == 'b') {
-                start ++;
+                min ++;
             }
         }
 
+        int start = min;
         int maxLen = len + aCnt;
-        int idx;
         for (int i = aCnt; i < maxLen; i++) {
-            idx = i % len;
-            if(!dp[idx]){
+            if(!dp[i]){
                 start ++;
             }
             if(!dp[i - aCnt]){
                 start --;
+                min = Math.min(min, start);
             }
-            min = Math.min(min, start);
         }
 
         System.out.println(min);
