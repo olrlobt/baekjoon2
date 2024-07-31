@@ -4,12 +4,6 @@ import java.io.InputStreamReader;
 
 public class Main {
     static int[][] minNum = {{6, 0}, {2, 1}, {5, 2}, {4, 4}, {6, 6}, {3, 7}, {7, 8}}; // 2, 3, 4, 5, 6, 7
-    // 7 = 8 = 1 + 1 + 2 // 8
-    // 6 = 9 = 1 + 1 + 1 // 0
-    // 5 = 1 + 7 // 2
-    // 4 = 1 + 1 // 4
-    // 3 = 7 // 7
-    // 2 = 1 // 1
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,16 +12,15 @@ public class Main {
 
         for (int idx = 0; idx < N; idx++) {
             int num = Integer.parseInt(br.readLine()); // 성냥 갯수
-            sb.append(min(num)).append(' ').append(max(num)).append('\n');
+            min(num, sb);
+            sb.append(' ').append(max(num)).append('\n');
         }
 
         System.out.println(sb);
     }
 
-    private static StringBuilder min(int num) {
-        StringBuilder sb = new StringBuilder();
+    private static StringBuilder min(int num, StringBuilder sb) {
         int minDigit = calMinDigit(num); // 최대 자릿수
-        // 6, 2, 5, 4, 3, 7 ;
         int idx = 0; // 자릿수
 
         while (idx != minDigit) {
@@ -44,8 +37,7 @@ public class Main {
                 }
 
                 num -= min[0];
-                int nextDigit = calMinDigit(num);
-                if (nextDigit + idx + 1 != minDigit || num < 0) {
+                if (calMinDigit(num) + idx + 1 != minDigit || num < 0) {
                     num += min[0];
                     continue;
                 }
@@ -59,29 +51,20 @@ public class Main {
 
 
     private static int calMinDigit(int num) { // 가장 작은 숫자가 몇 자릿수인지 구하는 함수
-        int digitOf8 = num / 7;
-        int modOf8 = num % 7;
-
-        if (modOf8 > 0) {
-            digitOf8++;
-        }
-        return digitOf8;
+        return num % 7 > 0 ? num / 7 + 1 : num / 7;
     }
 
     private static StringBuilder max(int num) {
         StringBuilder sb = new StringBuilder();
-
         int numOf2 = num / 2;
-        int modOf2 = num % 2;
 
         for (int i = 0; i < numOf2; i++) {
             sb.append(1);
         }
 
-        if (modOf2 != 0) {
+        if (num % 2 != 0) {
             sb.replace(0, 1, "7");
         }
-
         return sb;
     }
 }
