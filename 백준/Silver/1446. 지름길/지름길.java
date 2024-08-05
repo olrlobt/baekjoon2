@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,6 +38,7 @@ public class Main {
         pq.offer(new Node(0, 0, 0));
         int[] dp = new int[M + 1];
         Arrays.fill(dp, Integer.MAX_VALUE);
+        int nextDis;
 
         while (!pq.isEmpty()) {
             Node cur = pq.poll();
@@ -51,7 +51,7 @@ public class Main {
             }
 
             for(Node nextLoad : fast){
-                int nextDis = cur.distance + nextLoad.distance + (nextLoad.start - cur.start);
+                nextDis = cur.distance + nextLoad.distance + (nextLoad.start - cur.start);
                 if (cur.start > nextLoad.start || dp[nextLoad.end] < nextDis) {
                     continue;
                 }
