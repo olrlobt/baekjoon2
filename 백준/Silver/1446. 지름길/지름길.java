@@ -17,7 +17,7 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        List<Node> fast = new ArrayList<>();
+        PriorityQueue<Node> fast = new PriorityQueue<>();
 
         for (int idx = 0; idx < N; idx++) {
             st = new StringTokenizer(br.readLine());
@@ -33,9 +33,8 @@ public class Main {
         System.out.println(solve(fast, M));
     }
 
-    private static int solve(List<Node> fast, int M) {
+    private static int solve(PriorityQueue<Node> fast, int M) {
 
-        fast.sort((o1, o2) -> o1.start - o2.start);
         PriorityQueue<Node> pq = new PriorityQueue<>();
         pq.offer(new Node(0, 0, 0));
         int[] dp = new int[M + 1];
@@ -47,13 +46,17 @@ public class Main {
                 return cur.distance;
             }
 
-            for (Node fastLoad : fast) {
-                int nextDis = cur.distance + fastLoad.distance + (fastLoad.start - cur.start);
-                if (cur.start > fastLoad.start || dp[fastLoad.end] < nextDis) {
+            while (!fast.isEmpty() && fast.peek().start < cur.start) {
+                fast.poll();
+            }
+
+            for(Node nextLoad : fast){
+                int nextDis = cur.distance + nextLoad.distance + (nextLoad.start - cur.start);
+                if (cur.start > nextLoad.start || dp[nextLoad.end] < nextDis) {
                     continue;
                 }
-                dp[fastLoad.end] = nextDis;
-                pq.offer(new Node(fastLoad.end, 0, nextDis));// 다음 지름길까지 더함
+                dp[nextLoad.end] = nextDis;
+                pq.offer(new Node(nextLoad.end, 0, nextDis));// 다음 지름길까지 더함
             }
 
             if (dp[M] > cur.distance + M - cur.start) {
@@ -78,7 +81,10 @@ public class Main {
 
         @Override
         public int compareTo(Node o) {
-            return distance - o.distance;
+            if (start == o.start) {
+                return distance - o.distance;
+            }
+            return start - o.start;
         }
     }
 }
