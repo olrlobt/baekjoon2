@@ -3,11 +3,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
 
-    static ArrayList<ArrayList<Integer>> map = new ArrayList<>();
+    static List<List<Integer>> map = new ArrayList<>();
     static int one;
     static int two;
     static boolean[] visited;
@@ -22,7 +23,7 @@ public class Main {
         for (int i = 0; i <= N; i++) {
             map.add(new ArrayList<>());
         }
-        
+
         one = Integer.parseInt(st.nextToken());
         two = Integer.parseInt(st.nextToken());
 
@@ -36,25 +37,23 @@ public class Main {
             map.get(end).add(start);
         }
 
-        System.out.println(solve(one, 0));
+        int solve = solve(one, 0);
+        System.out.println(solve == 0 ? -1 : solve);
     }
 
     public static int solve(int cur, int count) {
         if (cur == two) {
             return count;
         }
+        int result = 0;
 
         for (int next : map.get(cur)) {
             if(visited[next]){
                 continue;
             }
             visited[next] = true;
-
-            int result = solve(next, count + 1);
-            if (result != -1){
-                return result;
-            };
+            result += solve(next, count + 1);
         }
-        return -1;
+        return result;
     }
 }
