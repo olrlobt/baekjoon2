@@ -1,5 +1,9 @@
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -8,24 +12,25 @@ public class Main {
     static int two;
     static boolean[] visited;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int N = sc.nextInt();
+        int N = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
         visited = new boolean[N + 1];
 
         for (int i = 0; i <= N; i++) {
             map.add(new ArrayList<>());
         }
-
         
-        one = sc.nextInt();
-        two = sc.nextInt();
+        one = Integer.parseInt(st.nextToken());
+        two = Integer.parseInt(st.nextToken());
 
-        int M = sc.nextInt();
+        int M = Integer.parseInt(br.readLine());
         for (int num = 0; num < M; num++) {
-            int start = sc.nextInt();
-            int end = sc.nextInt();
+            st = new StringTokenizer(br.readLine());
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
 
             map.get(start).add(end);
             map.get(end).add(start);
@@ -35,7 +40,6 @@ public class Main {
     }
 
     public static int solve(int cur, int count) {
-
         if (cur == two) {
             return count;
         }
