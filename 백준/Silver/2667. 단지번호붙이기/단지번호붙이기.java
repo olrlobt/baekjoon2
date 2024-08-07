@@ -2,10 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -28,7 +26,6 @@ public class Main {
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             String input = st.nextToken();
-
             for (int j = 0; j < N; j++) {
                 map[i][j] = input.charAt(j) - '0';
             }
@@ -59,16 +56,13 @@ public class Main {
         visited[row][column] = true;
 
         while (!queue.isEmpty()) {
-
             int[] cur = queue.poll();
-            int curRow = cur[0];
-            int curColumn = cur[1];
 
             for (int i = 0; i < 4; i++) {
-                int nextRow = curRow + dy[i];
-                int nextColumn = curColumn + dx[i];
+                int nextRow = cur[0] + dy[i];
+                int nextColumn = cur[1] + dx[i];
 
-                if (nextColumn < 0 || nextRow < 0 || nextRow >= N || nextColumn >= N || map[nextRow][nextColumn] == 0
+                if (nextColumn < 0 || nextRow < 0 || nextRow >= N || nextColumn >= N || map[nextRow][nextColumn] != 1
                 || visited[nextRow][nextColumn]) {
                     continue;
                 }
