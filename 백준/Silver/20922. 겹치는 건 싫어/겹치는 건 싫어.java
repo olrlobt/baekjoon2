@@ -20,18 +20,19 @@ public class Main {
         map[0] = Integer.parseInt(st.nextToken());
         dp[map[0]]++;
         int max = 1;
+        int diff = 1;
 
         while (++right < N) {
             int cur = Integer.parseInt(st.nextToken());
             map[right] = cur;
             dp[cur]++;
+            diff++;
 
             while (dp[cur] > K) {
-                dp[map[left]]--;
-                left++;
+                dp[map[left++]]--;
+                diff--;
             }
-
-            max = Math.max(max, right - left + 1);
+            max = Math.max(max, diff);
         }
         System.out.println(max);
     }
