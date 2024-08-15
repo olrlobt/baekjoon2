@@ -32,7 +32,9 @@ public class Main {
                 dp[map[left++]]--;
                 diff--;
             }
-            max = Math.max(max, diff);
+            if (max < diff) {
+                max = diff;
+            }
         }
         System.out.println(max);
     }
