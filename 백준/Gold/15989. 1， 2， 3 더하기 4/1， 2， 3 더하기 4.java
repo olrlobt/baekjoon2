@@ -31,11 +31,11 @@ public class Main {
             return dp[idx][N];
         }
 
-        if (idx == 3) {
-            dp[3][N] = solve(N - 3, 3) + solve(N - 3, 2) + 1;
-            return dp[3][N];
+        int sum = 0;
+        for (int i = 1; i <= idx; i++) {
+            sum += solve(N - idx, i);
         }
-        dp[2][N] = solve(N - 2, 2) + 1;
-        return dp[2][N];
+        dp[idx][N] = sum;
+        return dp[idx][N];
     }
 }
