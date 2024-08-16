@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class Main {
-    static int[][] dp = new int[4][10_001];
+     static int[][] dp = new int[4][10_001];
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,8 +18,7 @@ public class Main {
 
         for (int tc = 0; tc < T; tc++) {
             int N = Integer.parseInt(br.readLine());
-            int solve = solve(N, 2) + solve(N, 3) + 1;
-            sb.append(solve).append('\n');
+            sb.append(solve(N, 2) + solve(N, 3) + 1).append('\n');
         }
         System.out.println(sb);
     }
@@ -31,8 +30,8 @@ public class Main {
             return dp[idx][N];
         }
 
-        int sum = 0;
-        for (int i = 1; i <= idx; i++) {
+        int sum = 1;
+        for (int i = 2; i <= idx; i++) {
             sum += solve(N - idx, i);
         }
         return dp[idx][N] = sum;
