@@ -1,28 +1,29 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int sum = Integer.MAX_VALUE;
-        int temp = 0;
-        StringTokenizer subtraction = new StringTokenizer(br.readLine(), "-");
-        StringTokenizer addition;
-        while (subtraction.hasMoreTokens()) {
-            temp = 0;
+        String input = br.readLine();
 
-            addition = new StringTokenizer(subtraction.nextToken(), "+");
-            while (addition.hasMoreTokens()) {
-                temp += Integer.parseInt(addition.nextToken());
-            }
-            if (sum == Integer.MAX_VALUE) {
-                sum = temp;
-            } else {
-                sum -= temp;
-            }
+        int sum = 0;
+        String[] subtraction = input.split("-");
+        sum += sumParts(subtraction[0]);
+
+        for (int i = 1; i < subtraction.length; i++) {
+            sum -= sumParts(subtraction[i]);
         }
+
         System.out.println(sum);
+    }
+
+    private static int sumParts(String part) {
+        int sum = 0;
+        String[] addition = part.split("\\+");
+        for (String num : addition) {
+            sum += Integer.parseInt(num);
+        }
+        return sum;
     }
 }
