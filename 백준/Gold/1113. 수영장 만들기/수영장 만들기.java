@@ -12,7 +12,6 @@ public class Main {
     static final int[] dy = {0, 1, 0, -1};
     static char[][] map;
     static boolean[][] visited;
-    static boolean[][] overFlow;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,7 +20,6 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         map = new char[N][M];
-        overFlow = new boolean[N][M];
 
         for (int row = 0; row < N; row++) {
             map[row] = br.readLine().toCharArray();
@@ -48,8 +46,8 @@ public class Main {
         Queue<Node> queue = new ArrayDeque<>();
         queue.offer(new Node(row, col));
         visited[row][col] = true;
-        Queue<Node> queue2 = new ArrayDeque<>();
-        queue2.offer(new Node(row, col));
+        Queue<Node> visitedNode = new ArrayDeque<>();
+        visitedNode.offer(new Node(row, col));
 
         while (!queue.isEmpty()) {
             Node cur = queue.poll();
@@ -58,31 +56,27 @@ public class Main {
                 int nextRow = cur.row + dy[idx];
                 int nextCol = cur.col + dx[idx];
 
-                if (nextRow >= N || nextCol >= M || nextRow < 0 || nextCol < 0 || overFlow[nextRow][nextCol]) {
-                    while (!queue2.isEmpty()) {
-                        Node poll = queue2.poll();
-                        overFlow[poll.row][poll.col] = true;
+                if (nextRow >= N || nextCol >= M || nextRow < 0 || nextCol < 0 || map[nextRow][nextCol] == '0') {
+                    while (!visitedNode.isEmpty()) {
+                        Node poll = visitedNode.poll();
+                        map[poll.row][poll.col] = '0';
                     }
                     return 0; // 넘침
-                }
-
-                if (visited[nextRow][nextCol]) {
+                }else if (visited[nextRow][nextCol]) {
                     continue;
-                }
-
-                if (map[nextRow][nextCol] != c) {
+                }else if (map[nextRow][nextCol] != c) {
                     max = Math.min(max, map[nextRow][nextCol]);
                     continue;
                 }
                 visited[nextRow][nextCol] = true;
-                queue2.offer(new Node(nextRow, nextCol));
+                visitedNode.offer(new Node(nextRow, nextCol));
                 queue.offer(new Node(nextRow, nextCol));
             }
         }
         if(max == '9' + 1) return 0;
-        int result = (max - c) * queue2.size();
-        while (!queue2.isEmpty()) {
-            Node poll = queue2.poll();
+        int result = (max - c) * visitedNode.size();
+        while (!visitedNode.isEmpty()) {
+            Node poll = visitedNode.poll();
             map[poll.row][poll.col] = (char) max;
         }
         return result;
