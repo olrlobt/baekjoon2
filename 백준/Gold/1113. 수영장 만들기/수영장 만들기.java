@@ -1,0 +1,100 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+    static int N, M;
+    static final int[] dx = {1, 0, -1, 0};
+    static final int[] dy = {0, 1, 0, -1};
+    static char[][] map;
+    static boolean[][] visited;
+    static boolean[][] overFlow;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new char[N][M];
+        overFlow = new boolean[N][M];
+
+        for (int row = 0; row < N; row++) {
+            map[row] = br.readLine().toCharArray();
+        }
+        int result = 0;
+        for (int idx = 1; idx < 9; idx++) {
+            visited = new boolean[N][M];
+            for (int row = 0; row < N; row++) {
+                for (int col = 0; col < M; col++) {
+                    if (map[row][col] != idx + '0') {
+                        continue;
+                    }
+                    result += solve(row, col, map[row][col]);
+                }
+            }
+        }
+        System.out.println(result);
+    }
+
+    private static int solve(int row, int col, char c) {
+        // 물이 고일 수 있는건 1,1 ~ N-2, M-2
+        int max = '9' + 1;
+
+        Queue<Node> queue = new ArrayDeque<>();
+        queue.offer(new Node(row, col));
+        visited[row][col] = true;
+        Queue<Node> queue2 = new ArrayDeque<>();
+        queue2.offer(new Node(row, col));
+
+        while (!queue.isEmpty()) {
+            Node cur = queue.poll();
+
+            for (int idx = 0; idx < 4; idx++) {
+                int nextRow = cur.row + dy[idx];
+                int nextCol = cur.col + dx[idx];
+
+                if (nextRow >= N || nextCol >= M || nextRow < 0 || nextCol < 0 || overFlow[nextRow][nextCol]) {
+                    while (!queue2.isEmpty()) {
+                        Node poll = queue2.poll();
+                        overFlow[poll.row][poll.col] = true;
+                    }
+                    return 0; // 넘침
+                }
+
+                if (visited[nextRow][nextCol]) {
+                    continue;
+                }
+
+                if (map[nextRow][nextCol] != c) {
+                    max = Math.min(max, map[nextRow][nextCol]);
+                    continue;
+                }
+                visited[nextRow][nextCol] = true;
+                queue2.offer(new Node(nextRow, nextCol));
+                queue.offer(new Node(nextRow, nextCol));
+            }
+        }
+        if(max == '9' + 1) return 0;
+        int result = (max - c) * queue2.size();
+        while (!queue2.isEmpty()) {
+            Node poll = queue2.poll();
+            map[poll.row][poll.col] = (char) max;
+        }
+        return result;
+    }
+
+    private static class Node {
+        int row;
+        int col;
+
+        public Node(int row, int col) {
+            this.row = row;
+            this.col = col;
+        }
+    }
+}
