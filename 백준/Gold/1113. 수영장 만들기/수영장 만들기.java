@@ -40,8 +40,7 @@ public class Main {
     }
 
     private static int solve(int row, int col, char c) {
-        // 물이 고일 수 있는건 1,1 ~ N-2, M-2
-        int max = '9' + 1;
+        int max = ':';
 
         Queue<Node> queue = new ArrayDeque<>();
         queue.offer(new Node(row, col));
@@ -73,7 +72,7 @@ public class Main {
                 queue.offer(new Node(nextRow, nextCol));
             }
         }
-        if(max == '9' + 1) return 0;
+        if(max == ':') return 0;
         int result = (max - c) * visitedNode.size();
         while (!visitedNode.isEmpty()) {
             Node poll = visitedNode.poll();
