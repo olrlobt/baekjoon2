@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,20 +16,19 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
         Map<String, Node> map = new HashMap<>();
-        Set<Node> list = new HashSet<>();
 
         for (int i = 0; i < N; i++) {
             String str = br.readLine();
-            if (str.length() < M) {
+            int len = str.length();
+            if (len < M) {
                 continue;
             }
 
-            Node node = map.getOrDefault(str, new Node(str, 0));
+            Node node = map.getOrDefault(str, new Node(str, 0, len));
             node.num++;
             map.put(str, node);
-            list.add(node);
         }
-        PriorityQueue<Node> pq = new PriorityQueue<>(list);
+        PriorityQueue<Node> pq = new PriorityQueue<>(map.values());
 
         StringBuilder sb = new StringBuilder();
         while (!pq.isEmpty()) {
@@ -43,19 +41,21 @@ public class Main {
     private static class Node implements Comparable<Node> {
         String str;
         int num;
+        int size;
 
-        public Node(String str, int num) {
+        public Node(String str, int num, int size) {
             this.str = str;
             this.num = num;
+            this.size = size;
         }
-        
+
         @Override
         public int compareTo(Node o) {
             if (this.num == o.num) {
-                if (this.str.length() == o.str.length()) {
+                if (this.size == o.size) {
                     return String.CASE_INSENSITIVE_ORDER.compare(this.str, o.str);
                 }
-                return o.str.length() - this.str.length();
+                return o.size - this.size;
             }
             return o.num - this.num;
         }
