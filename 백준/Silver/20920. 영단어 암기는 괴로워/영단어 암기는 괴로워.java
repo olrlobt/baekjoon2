@@ -2,13 +2,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -33,12 +30,11 @@ public class Main {
             map.put(str, node);
             list.add(node);
         }
-        List<Node> sortList = new ArrayList<>(list);
-        Collections.sort(sortList);
+        PriorityQueue<Node> pq = new PriorityQueue<>(list);
 
         StringBuilder sb = new StringBuilder();
-        for (Node node : sortList) {
-            sb.append(node.str).append('\n');
+        while (!pq.isEmpty()) {
+            sb.append(pq.poll().str).append('\n');
         }
         System.out.println(sb);
 
@@ -52,7 +48,7 @@ public class Main {
             this.str = str;
             this.num = num;
         }
-
+        
         @Override
         public int compareTo(Node o) {
             if (this.num == o.num) {
