@@ -1,8 +1,11 @@
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -10,37 +13,34 @@ public class Main {
     static int M;
     static int X;
     static ArrayList<ArrayList<Town>> map = new ArrayList<>();
-    static int[][] dp;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        N = sc.nextInt();
-        M = sc.nextInt();
-        X = sc.nextInt(); // 파티가 열리는 마을
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        X = Integer.parseInt(st.nextToken());
 
         for (int i = 0; i <= N; i++) {
             map.add(new ArrayList<>());
         }
 
         for (int road = 0; road < M; road++) {
-
-            int start = sc.nextInt();
-            int end = sc.nextInt();
-            int time = sc.nextInt();
+            st = new StringTokenizer(br.readLine());
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+            int time = Integer.parseInt(st.nextToken());
 
             map.get(start).add(new Town(end, time));
         }
 
         int max = 0;
 
-        for(int i = 1; i <= N; i ++){
-            if( i == X){
+        for (int i = 1; i <= N; i++) {
+            if (i == X) {
                 continue;
             }
-            max = Math.max(max , solve(i,X) + solve(X,i));
-
-
+            max = Math.max(max, solve(i, X) + solve(X, i));
         }
         System.out.println(max);
     }
@@ -48,20 +48,19 @@ public class Main {
     public static int solve(int startIndex, int endIndex) {
 
         PriorityQueue<Town> pq = new PriorityQueue<>();
-        pq.offer(new Town(startIndex,0));
+        pq.offer(new Town(startIndex, 0));
 
-        int [] dp = new int[N+1];
-        Arrays.fill(dp,Integer.MAX_VALUE);
+        int[] dp = new int[N + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
         dp[startIndex] = 0;
 
         while (!pq.isEmpty()) {
 
             Town curTown = pq.poll();
 
-
             for (Town town : map.get(curTown.index)) {
 
-                if(dp[town.index] > curTown.time + town.time){
+                if (dp[town.index] > curTown.time + town.time) {
                     dp[town.index] = curTown.time + town.time;
                     pq.offer(new Town(town.index, dp[town.index]));
 
