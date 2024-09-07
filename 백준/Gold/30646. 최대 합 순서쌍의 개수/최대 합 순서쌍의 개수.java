@@ -13,21 +13,20 @@ public class Main {
 
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        long[] map = new long[N + 1];
-        long[] sum = new long[N + 1];
+        long[] sum = new long[N + 2];
         long max = 0;
         int count = 0;
         Map<Long, Integer> location = new HashMap<>();
 
         for (int idx = 1; idx <= N; idx++) {
-            map[idx] = Integer.parseInt(st.nextToken());
-            sum[idx] = map[idx] + sum[idx - 1];
-            if(!location.containsKey(map[idx])){
-                location.put(map[idx], idx);
+            long cur = Long.parseLong(st.nextToken());
+            sum[idx + 1] = cur + sum[idx];
+            if(!location.containsKey(cur)){
+                location.put(cur, idx);
             }
 
-            int startIdx = location.get(map[idx]);
-            long curSum = sum[idx] - sum[startIdx] + map[idx];
+            int startIdx = location.get(cur);
+            long curSum = sum[idx + 1] - sum[startIdx];
 
             if (curSum == max) {
                 count++;
