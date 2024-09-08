@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,16 +52,18 @@ public class Main {
             }
 
             for (Node next : map.get(cur.idx)) {
+                long nextTime = (long) cur.cycle * M + next.time;
 
-                if (cur.time < next.time && dp[next.idx] > (long) cur.cycle * M + next.time) {
-                    dp[next.idx] = (long) cur.cycle * M + next.time;
+                if (cur.time < next.time && dp[next.idx] > nextTime) {
+                    dp[next.idx] = nextTime;
                     pq.offer(new Node(next.idx, cur.cycle, next.time));
-                } else if(dp[next.idx] > (long) cur.cycle * M + M + next.time) {
-                    dp[next.idx] = (long) cur.cycle * M + M + next.time;
+                } else if(dp[next.idx] >  nextTime + M) {
+                    dp[next.idx] =  nextTime + M;
                     pq.offer(new Node(next.idx, cur.cycle + 1, next.time));
                 }
             }
         }
+
         return 0;
     }
 
@@ -80,9 +81,9 @@ public class Main {
         @Override
         public int compareTo(Node o) {
             if (cycle == o.cycle) {
-                return time - o.time;
+                return Integer.compare(time, o.time);
             }
-            return cycle - o.cycle;
+            return Integer.compare(cycle, o.cycle);
         }
     }
 
