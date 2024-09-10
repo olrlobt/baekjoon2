@@ -10,6 +10,8 @@ public class Main {
     static int maxRow = 3;
     static int maxCol = 3;
     static int[][] map = new int[101][101];
+    static PriorityQueue<Node> pq = new PriorityQueue<>();
+    static int[] count = new int[101];
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -34,7 +36,7 @@ public class Main {
                 for (int row = 1; row <= maxRow; row++) {
                     calRow(map[row]);
                 }
-            }else{
+            } else {
                 for (int col = 1; col <= maxCol; col++) {
                     calCol(col);
                 }
@@ -43,23 +45,19 @@ public class Main {
 
         if (count == 101) {
             System.out.println(-1);
-        }else{
+        } else {
             System.out.println(count);
         }
     }
 
-
-    // 수의 등장 횟수가 커지는 순으로
-    // 수가 커지는 순
     private static void calRow(int[] row) {
-        int[] count = new int[101];
+        Arrays.fill(count, 0);
+        pq.clear();
 
-        for (int num : row) {
-            count[num]++;
+        for (int col = 1; col <= maxCol; col++) {
+            count[row[col]]++;
         }
-
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-
+                
         for (int idx = 1; idx < 101; idx++) {
             if (count[idx] != 0) {
                 pq.offer(new Node(idx, count[idx]));
@@ -68,24 +66,23 @@ public class Main {
 
         Arrays.fill(row, 0);
         maxCol = Math.max(maxCol, pq.size() * 2);
-        for (int idx = 1; idx < 50 && !pq.isEmpty(); idx++) {
+        for (int idx = 2; idx < 100 && !pq.isEmpty(); idx += 2) {
             Node cur = pq.poll();
-            row[idx * 2 - 1] = cur.idx;
-            row[idx * 2] = cur.count;
+            row[idx - 1] = cur.idx;
+            row[idx] = cur.count;
         }
     }
 
-    // 수의 등장 횟수가 커지는 순으로
-    // 수가 커지는 순
     private static void calCol(int colIdx) {
-        int[] count = new int[101];
+        Arrays.fill(count, 0);
+        pq.clear();
 
-        for (int row = 0; row <= maxRow; row++) {
+        for (int row = 1; row <= maxRow; row++) {
             count[map[row][colIdx]]++;
             map[row][colIdx] = 0;
         }
 
-        PriorityQueue<Node> pq = new PriorityQueue<>();
+        int max = maxRow;
 
         for (int idx = 1; idx < 101; idx++) {
             if (count[idx] != 0) {
@@ -94,10 +91,10 @@ public class Main {
         }
 
         maxRow = Math.max(maxRow, pq.size() * 2);
-        for (int idx = 1; idx < 50 && !pq.isEmpty(); idx++) {
+        for (int idx = 2; idx < 100 && !pq.isEmpty(); idx += 2) {
             Node cur = pq.poll();
-            map[idx * 2 - 1][colIdx] = cur.idx;
-            map[idx * 2][colIdx] = cur.count;
+            map[idx - 1][colIdx] = cur.idx;
+            map[idx][colIdx] = cur.count;
         }
     }
 
@@ -113,18 +110,9 @@ public class Main {
         @Override
         public int compareTo(Node o) {
             if (this.count == o.count) {
-                return idx - o.idx;
+                return Integer.compare(idx, o.idx);
             }
-            return count - o.count;
-        }
-
-        @Override
-        public String toString() {
-            return "Node{" +
-                    "idx=" + idx +
-                    ", count=" + count +
-                    '}';
+            return Integer.compare(count, o.count);
         }
     }
-
 }
