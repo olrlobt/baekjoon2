@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -54,12 +55,18 @@ public class Main {
         Arrays.fill(count, 0);
         pq.clear();
 
+        int max = 0;
         for (int col = 1; col <= maxCol; col++) {
+            if (row[col] == 0) {
+                continue;
+            }
+            max++;
             count[row[col]]++;
         }
-                
-        for (int idx = 1; idx < 101; idx++) {
+
+        for (int idx = 1; idx < 101 && max > 0 ; idx++) {
             if (count[idx] != 0) {
+                max -= count[idx];
                 pq.offer(new Node(idx, count[idx]));
             }
         }
@@ -77,15 +84,20 @@ public class Main {
         Arrays.fill(count, 0);
         pq.clear();
 
+        int max = 0;
         for (int row = 1; row <= maxRow; row++) {
+            if (map[row][colIdx] == 0) {
+                continue;
+            }
+            max ++;
             count[map[row][colIdx]]++;
             map[row][colIdx] = 0;
         }
 
-        int max = maxRow;
 
-        for (int idx = 1; idx < 101; idx++) {
+        for (int idx = 1; idx < 101 && max > 0 ; idx++) {
             if (count[idx] != 0) {
+                max -= count[idx];
                 pq.offer(new Node(idx, count[idx]));
             }
         }
